@@ -43,6 +43,14 @@ class StorageUtil {
   static String? getJourneyId() => _prefs.getString(_keyJourneyId);
   static Future<bool> removeJourneyId() => _prefs.remove(_keyJourneyId);
 
+  // 目标路由相关
+  static const String _keyTargetRoute = "targetRoute";
+
+  static Future<bool> setTargetRoute(String value) =>
+      _prefs.setString(_keyTargetRoute, value);
+  static String? getTargetRoute() => _prefs.getString(_keyTargetRoute);
+  static Future<bool> removeTargetRoute() => _prefs.remove(_keyTargetRoute);
+
   // 退出登录清理缓存
   static Future<void> clearAll() async {
     await _prefs.clear();

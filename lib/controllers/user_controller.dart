@@ -68,6 +68,14 @@ class UserController extends GetxController {
     Get.offAllNamed('/home');
   }
 
+  /// 更新用户信息（不触发导航）
+  void updateUserInfo(UserModel user) {
+    _user.value = user;
+    StorageUtil.setUserId(user.userId);
+    StorageUtil.setUsername(user.username);
+    if (user.avatar != null) StorageUtil.setAvatar(user.avatar!);
+  }
+
   /// 统一的注销/过期跳转逻辑
   void handleAuthLoss({bool toLogin = false}) {
     // 清理内存状态

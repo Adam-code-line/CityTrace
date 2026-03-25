@@ -62,11 +62,11 @@ class HomePage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                // _buildDrawerItem(
-                //   Icons.person_outline,
-                //   "个人主页",
-                //   () => controller.handleMenuClick('/profile'),
-                // ),
+                _buildDrawerItem(
+                  Icons.person_outline,
+                  "个人主页",
+                  () => controller.handleMenuClick('/profile'),
+                ),
                 _buildDrawerItem(
                   Icons.location_on_outlined,
                   "全部行程",

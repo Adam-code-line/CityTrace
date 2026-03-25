@@ -154,7 +154,13 @@ class HomeController extends GetxController {
 
   /// 侧边栏菜单点击
   void handleMenuClick(String route) {
-    isLoggedIn ? Get.toNamed(route) : Get.toNamed('/login'); // 一般碰不到跳回登录页的情况
+    if (isLoggedIn) {
+      Get.toNamed(route);
+    } else {
+      // 记录目标页面，登录成功后跳转
+      StorageUtil.setTargetRoute(route);
+      Get.toNamed('/login');
+    }
   }
 
   /// 未登录状态下悬浮按钮点击
