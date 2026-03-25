@@ -215,7 +215,15 @@ class HomePage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          onSelected: (value) => Fluttertoast.showToast(msg: "点击了 $value"),
+          onSelected: (value) {
+            if (value == 'about') {
+              // 如果点击的是关于我们，就跳转
+              Get.toNamed('/about');
+            } else {
+              // 其他项暂时还是弹个窗
+              Fluttertoast.showToast(msg: "点击了 $value");
+            }
+          },
           itemBuilder: (context) => [
             _buildPopupItem("设置", Icons.settings_outlined, "settings"),
             _buildPopupItem("帮助与反馈", Icons.help_outline, "help"),
