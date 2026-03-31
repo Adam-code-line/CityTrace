@@ -71,4 +71,22 @@ class JourneyService {
       return false;
     }
   }
+
+  /// 6. 更新行程
+  Future<JourneyModel?> updateJourney(
+    String journeyId, {
+    String? title,
+    String? description,
+    String? cover,
+  }) async {
+    try {
+      final response = await _apiClient.patch(
+        '/journey/$journeyId',
+        data: {'title': title, 'description': description, 'cover': cover},
+      );
+      return JourneyModel.fromJson(response.data['data']);
+    } catch (e) {
+      return null;
+    }
+  }
 }
