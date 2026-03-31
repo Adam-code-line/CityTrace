@@ -17,6 +17,7 @@ class MapTraceController extends GetxController {
   final Rx<DateTime?> startTime = Rx<DateTime?>(null); // 行程开始时间
   final RxString durationStr = "00:00:00".obs;
 
+  Duration _serverTimeOffset = Duration.zero;
   StreamSubscription<Position>? _positionStream;
   Timer? _timer;
 
@@ -50,13 +51,25 @@ class MapTraceController extends GetxController {
   }
 
   /// 开始行程录制
-  void startJourney(String id, {DateTime? time}) {
+  void startJourney(String id, {DateTime? time, bool withOffset = false}) {
     tracePoints.clear();
     isRecording.value = true;
     isInJourney.value = true;
     currentJourneyId.value = id;
 
-    startTime.value = time ?? DateTime.now();
+    if (withOffset) {
+      if (time != null) {
+        startTime.value = time;
+        _serverTimeOffset = time.difference(DateTime.now());
+      } else {
+        startTime.value = DateTime.now();
+        _serverTimeOffset = Duration.zero;
+      }
+    } else {
+      startTime.value = time ?? DateTime.now();
+      _serverTimeOffset = Duration.zero;
+    }
+
     _startTimer();
 
     StorageUtil.setJourneyId(id);
@@ -96,7 +109,14 @@ class MapTraceController extends GetxController {
     if (startTime.value == null) return;
 
     final now = DateTime.now();
-    final difference = now.difference(startTime.value!);
+    final calibratedNow = now.add(_serverTimeOffset);
+    final difference = calibratedNow.difference(startTime.value!);
+
+    // 防止因为微小的误差出现负数显示
+    if (difference.isNegative) {
+      durationStr.value = "00:00:00";
+      return;
+    }
 
     // 格式化为 HH:mm:ss
     String twoDigits(int n) => n.toString().padLeft(2, "0");
