@@ -4,6 +4,7 @@ import '../../services/journey_management/journey_service.dart';
 import '../../services/journey_management/folder_service.dart';
 import '../../models/journey_model.dart';
 import '../../models/folder_model.dart';
+import '../home/home_controller.dart';
 
 class ListController extends GetxController {
   final JourneyService _journeyService = JourneyService();
@@ -60,6 +61,32 @@ class ListController extends GetxController {
     _fetchJourneys();
   }
 
+  /// 重命名行程
+  Future<void> renameJourney(String journeyId, String newTitle) async {
+    if (newTitle.isEmpty) return;
+
+    final updatedJourney = await _journeyService.updateJourney(
+      journeyId,
+      title: newTitle,
+    );
+
+    if (updatedJourney != null) {
+      // 找到本地列表中的 index 并替换，触发 Obx 刷新
+      int index = journeys.indexWhere((j) => j.journeyId == journeyId);
+      if (index != -1) {
+        journeys[index] = updatedJourney;
+        journeys.refresh(); // 通知 RxList 更新
+      }
+      // 主页更新
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().loadRecentTrips();
+      }
+      Get.snackbar("成功", "行程已重命名");
+    } else {
+      Get.snackbar("错误", "重命名失败，请重试");
+    }
+  }
+
   /// 移动行程到指定文件夹
   Future<void> moveJourney(String journeyId, String targetFolderId) async {
     // 调用 folderService 中已有的 moveJourneyToFolder
@@ -82,6 +109,10 @@ class ListController extends GetxController {
     final success = await _journeyService.deleteJourney(id);
     if (success) {
       journeys.removeWhere((item) => item.journeyId == id);
+      // 主页更新
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().loadRecentTrips();
+      }
       Get.snackbar("提示", "行程已移除");
     }
   }

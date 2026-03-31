@@ -195,7 +195,15 @@ class ListPage extends GetView<ListController> {
             ListTile(
               leading: const Icon(Icons.edit_outlined),
               title: const Text("重命名行程"),
-              onTap: () => Get.back(),
+              onTap: () {
+                Get.back();
+                _showInputDialog(
+                  title: "重命名行程",
+                  initialValue: journey.title,
+                  onConfirm: (newName) =>
+                      controller.renameJourney(journey.journeyId, newName),
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.folder_open_outlined),

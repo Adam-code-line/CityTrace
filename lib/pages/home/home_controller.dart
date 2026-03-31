@@ -43,7 +43,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     _loadOngoingJourney();
-    _loadRecentTrips();
+    loadRecentTrips();
     if (currentPos != null) {
       _handlePositionChange(currentPos!);
     }
@@ -52,12 +52,12 @@ class HomeController extends GetxController {
       if (pos != null) _handlePositionChange(pos);
     });
     // 监听登录状态变化
-    ever(_userController.isLoggedInRx, (_) => _loadRecentTrips());
+    ever(_userController.isLoggedInRx, (_) => loadRecentTrips());
     // 监听行程状态变化
     ever(_mapController.isInJourney, (bool isInJourney) {
       if (!isInJourney && isLoggedIn) {
         // 行程结束且已登录，刷新最近行程列表
-        _loadRecentTrips();
+        loadRecentTrips();
       }
     });
   }
@@ -88,7 +88,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void _loadRecentTrips() async {
+  void loadRecentTrips() async {
     if (!isLoggedIn) {
       recentTrips.clear();
       return;
@@ -135,6 +135,7 @@ class HomeController extends GetxController {
       _mapController.startJourney(
         newJourney.journeyId,
         time: DateTime.tryParse(newJourney.startTime),
+        withOffset: true,
       );
       // UI 反馈
       Get.back(); // 关闭底栏
