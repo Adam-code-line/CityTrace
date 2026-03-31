@@ -140,6 +140,16 @@ class JourneyDetailController extends GetxController {
     // Loading 动画
     _showLoading();
 
+    // 请求逆地理编码，更新位置信息
+    final geo = await _contextService.getGeoInfo(pos.latitude, pos.longitude);
+    if (geo != null) {
+      // 地址格式：上海市 · 黄浦区 · 外滩
+      currentAddress.value =
+          "${geo.city} · ${geo.district} · ${geo.name ?? geo.address ?? ''}";
+    } else {
+      currentAddress.value = "未知地点";
+    }
+
     final newMoment = await _momentService.uploadMoment(
       journeyId: journeyId,
       type: type,
@@ -148,6 +158,7 @@ class JourneyDetailController extends GetxController {
       filePath: filePath,
       context: context,
       title: title,
+      locationName: currentAddress.value,
     );
 
     Get.back(); // 隐藏 Loading
