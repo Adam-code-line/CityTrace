@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,7 +33,7 @@ class JourneyDetailPage extends StatelessWidget {
             _buildAppBar(), // Header
             SliverToBoxAdapter(child: _buildSummaryCard()), // 概览卡片
             _buildTimelineList(), // 时间轴
-            const SliverToBoxAdapter(child: SizedBox(height: 120)),
+            SliverToBoxAdapter(child: SizedBox(height: 120.h)),
           ],
         );
       }),
@@ -43,7 +44,7 @@ class JourneyDetailPage extends StatelessWidget {
   Widget _buildAppBar() {
     JourneyDetailController controller = Get.find<JourneyDetailController>();
     return SliverAppBar(
-      expandedHeight: 240,
+      expandedHeight: 240.h,
       pinned: true,
       iconTheme: const IconThemeData(color: Colors.white),
       actionsIconTheme: const IconThemeData(color: Colors.white),
@@ -52,23 +53,23 @@ class JourneyDetailPage extends StatelessWidget {
         title: Obx(
           () => Text(
             controller.journey.value?.title ?? "行程详情",
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: 18.sp,
               // 添加微弱阴影增强在浅色背景图上的辨识度
               shadows: [
                 Shadow(
                   color: Colors.black26,
-                  blurRadius: 8,
-                  offset: Offset(0, 1),
+                  blurRadius: 8.r,
+                  offset: Offset(0, 1.h),
                 ),
               ],
             ),
           ),
         ),
         centerTitle: true,
-        titlePadding: const EdgeInsets.only(bottom: 16),
+        titlePadding: EdgeInsets.only(bottom: 16.h),
         background: Stack(
           fit: StackFit.expand,
           children: [
@@ -115,41 +116,37 @@ class JourneyDetailPage extends StatelessWidget {
   Widget _buildSummaryCard() {
     JourneyDetailController controller = Get.find<JourneyDetailController>();
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(24.r),
         // 使用更柔和的阴影，让卡片有浮起感
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            blurRadius: 20.r,
+            offset: Offset(0, 8.h),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            width: 80,
-            height: 80,
+            width: 80.w,
+            height: 80.h,
             decoration: BoxDecoration(
               color: const Color(0xFF009688).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                const Icon(
-                  Icons.map_outlined,
-                  color: Color(0xFF009688),
-                  size: 32,
-                ),
+                Icon(Icons.map_outlined, color: Color(0xFF009688), size: 32.r),
               ],
             ),
           ),
-          const SizedBox(width: 20),
+          SizedBox(width: 20.w),
 
           Expanded(
             child: Column(
@@ -160,7 +157,7 @@ class JourneyDetailPage extends StatelessWidget {
                     Obx(
                       () => _buildStatItem(controller.displayDuration, "累计时长"),
                     ),
-                    const SizedBox(width: 48),
+                    SizedBox(width: 48.w),
                     Obx(
                       () => _buildStatItem(
                         "${controller.moments.length}",
@@ -169,23 +166,20 @@ class JourneyDetailPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Divider(height: 24),
+                Divider(height: 24.h),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.push_pin_outlined,
-                      size: 14,
+                      size: 14.r,
                       color: Colors.grey,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4.w),
                     Expanded(
                       child: Text(
                         controller.journey.value?.startTime.split('T')[0] ??
                             "未知时间",
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                       ),
                     ),
                   ],
@@ -206,15 +200,18 @@ class JourneyDetailPage extends StatelessWidget {
           children: [
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 20,
+              style: TextStyle(
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'monospace', // 时间保持等宽
               ),
             ),
           ],
         ),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+        ),
       ],
     );
   }
@@ -234,7 +231,7 @@ class JourneyDetailPage extends StatelessWidget {
 
   Widget _buildTimelineItem(MomentModel moment, bool isLast) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: IntrinsicHeight(
         // 让 Row 的高度由内容最高的子组件决定
         child: Row(
@@ -242,12 +239,12 @@ class JourneyDetailPage extends StatelessWidget {
           children: [
             // 左侧：轴线和节点
             SizedBox(
-              width: 40,
+              width: 40.w,
               child: Column(
                 children: [
                   Container(
-                    width: 32,
-                    height: 32,
+                    width: 32.w,
+                    height: 32.h,
                     decoration: const BoxDecoration(
                       color: Color(0xFF009688),
                       shape: BoxShape.circle,
@@ -255,21 +252,21 @@ class JourneyDetailPage extends StatelessWidget {
                     child: Icon(
                       _getIconByType(moment.type),
                       color: Colors.white,
-                      size: 16,
+                      size: 16.r,
                     ),
                   ),
                   if (!isLast)
                     Expanded(
-                      child: Container(width: 2, color: Colors.grey.shade200),
+                      child: Container(width: 2.w, color: Colors.grey.shade200),
                     ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16.w),
             // 右侧：内容卡片
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 32), // 瞬间之间的间距
+                padding: EdgeInsets.only(bottom: 32.h), // 瞬间之间的间距
                 child: _buildMomentContentCard(moment),
               ),
             ),
@@ -300,16 +297,16 @@ class JourneyDetailPage extends StatelessWidget {
 
   Widget _buildMomentContentCard(MomentModel moment) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            blurRadius: 15.r,
+            offset: Offset(0, 5.h),
           ),
         ],
       ),
@@ -320,20 +317,17 @@ class JourneyDetailPage extends StatelessWidget {
           // 标题行
           if (moment.title != null && moment.title!.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: EdgeInsets.only(bottom: 12.h),
               child: Text(
                 moment.title!,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
               ),
             ),
 
           // 核心内容区域
           MomentCard.buildTypedContent(moment),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
 
           // 标签 + 地点 + 时间
           _buildMomentFooter(moment),
@@ -357,19 +351,19 @@ class JourneyDetailPage extends StatelessWidget {
               children: moment.tags!
                   .map(
                     (tag) => Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                      margin: EdgeInsets.only(right: 8.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF009688).withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
                         "#$tag",
-                        style: const TextStyle(
-                          fontSize: 11,
+                        style: TextStyle(
+                          fontSize: 11.sp,
                           color: Color(0xFF009688),
                         ),
                       ),
@@ -378,11 +372,11 @@ class JourneyDetailPage extends StatelessWidget {
                   .toList(),
             ),
           ),
-          const SizedBox(height: 12),
-          const Divider(height: 1, thickness: 0.5), // 有标签时，用线分割
-          const SizedBox(height: 10),
+          SizedBox(height: 12.h),
+          Divider(height: 1.h, thickness: 0.5), // 有标签时，用线分割
+          SizedBox(height: 10.h),
         ] else ...[
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
         ],
 
         // 底部地点+时间
@@ -396,15 +390,15 @@ class JourneyDetailPage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.location_on,
-                          size: 12,
+                          size: 12.r,
                           color: Colors.grey.shade400,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
                             moment.location.name ?? "未知地点",
                             style: TextStyle(
-                              fontSize: 11,
+                              fontSize: 11.sp,
                               color: Colors.grey.shade500,
                             ),
                             maxLines: 1,
@@ -417,7 +411,7 @@ class JourneyDetailPage extends StatelessWidget {
             Text(
               moment.time.split('T').last.substring(0, 5),
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 11.sp,
                 color: Colors.grey.shade400,
                 fontFamily: 'monospace',
               ),

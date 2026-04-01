@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'list_controller.dart';
 import '../../models/journey_model.dart';
@@ -13,9 +14,13 @@ class ListPage extends GetView<ListController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "我的行程",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+          style: TextStyle(
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -35,7 +40,7 @@ class ListPage extends GetView<ListController> {
                 return _buildEmptyState();
               }
               return ListView.builder(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20.r),
                 itemCount: controller.journeys.length,
                 itemBuilder: (context, index) =>
                     _buildJourneyCard(controller.journeys[index]),
@@ -50,12 +55,12 @@ class ListPage extends GetView<ListController> {
   /// 文件夹筛选条
   Widget _buildFolderFilter() {
     return Container(
-      height: 60,
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      height: 60.h,
+      padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Obx(
         () => ListView(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           children: [
             // “全部”选项
             _buildFilterChip("全部", "all"),
@@ -64,19 +69,19 @@ class ListPage extends GetView<ListController> {
               (f) => _buildFilterChip(f.name, f.folderId, isDynamic: true),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 12),
+              padding: EdgeInsets.only(right: 12.w),
               child: GestureDetector(
                 onTap: () => _showInputDialog(
                   title: "新建文件夹",
                   onConfirm: (name) => controller.createFolder(name),
                 ),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(25.r),
                   ),
-                  child: const Icon(Icons.add, color: Colors.black54, size: 20),
+                  child: Icon(Icons.add, color: Colors.black54, size: 20.r),
                 ),
               ),
             ),
@@ -96,16 +101,17 @@ class ListPage extends GetView<ListController> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.only(right: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          margin: EdgeInsets.only(right: 12.w),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           decoration: BoxDecoration(
             color: isSelected ? const Color(0xFF009688) : Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(25.r),
           ),
           child: Center(
             child: Text(
               label,
               style: TextStyle(
+                fontSize: 14.sp,
                 color: isSelected ? Colors.white : Colors.black54,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
@@ -122,15 +128,15 @@ class ListPage extends GetView<ListController> {
       onTap: () => Get.toNamed('/journey', arguments: journey.journeyId),
       onLongPress: () => _showJoueneyOptions(journey), // 长按弹出删除/移动菜单
       child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
+        margin: EdgeInsets.only(bottom: 20.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: 10.r,
+              offset: Offset(0, 4.h),
             ),
           ],
         ),
@@ -138,21 +144,19 @@ class ListPage extends GetView<ListController> {
           children: [
             // 卡片上半部分：路径缩略图或头图
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
               child: Image.network(
                 journey.cover,
-                height: 160,
+                height: 160.h,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (c, e, s) =>
-                    Container(color: Colors.teal.shade100, height: 160),
+                    Container(color: Colors.teal.shade100, height: 160.h),
               ),
             ),
             // 卡片下半部分：信息
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.r),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -161,18 +165,15 @@ class ListPage extends GetView<ListController> {
                     children: [
                       Text(
                         journey.title,
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Text(
                         journey.startTime.split('T')[0],
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.grey, fontSize: 12.sp),
                       ),
                     ],
                   ),
@@ -232,8 +233,8 @@ class ListPage extends GetView<ListController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.map_outlined, size: 80, color: Colors.grey.shade200),
-          const SizedBox(height: 16),
+          Icon(Icons.map_outlined, size: 80.r, color: Colors.grey.shade200),
+          SizedBox(height: 16.h),
           const Text("这里空空如也，快去开启一段旅程吧", style: TextStyle(color: Colors.grey)),
         ],
       ),
@@ -318,21 +319,21 @@ class ListPage extends GetView<ListController> {
     Get.bottomSheet(
       Container(
         constraints: BoxConstraints(maxHeight: Get.height * 0.6), // 防止文件夹过多撑满屏幕
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(20),
+            Padding(
+              padding: EdgeInsets.all(20.r),
               child: Text(
                 "移动到文件夹",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
             ),
-            const Divider(height: 1),
+            Divider(height: 1.h),
             Expanded(
               child: Obx(() {
                 if (controller.folders.isEmpty) {

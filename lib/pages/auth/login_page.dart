@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'login_controller.dart';
 
@@ -15,27 +16,24 @@ class LoginPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(backgroundColor: Colors.white, elevation: 0),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(32.0),
+        padding: EdgeInsets.all(32.r),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             // 标题
             Obx(
               () => Text(
                 controller.isLogin.value ? "欢迎回来" : "加入城市寻迹",
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 32.sp, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               "用AI丈量城市，让记忆自动成书",
-              style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+              style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade600),
             ),
-            const SizedBox(height: 48),
+            SizedBox(height: 48.h),
 
             // 表单区域
             Form(
@@ -52,14 +50,14 @@ class LoginPage extends StatelessWidget {
                             validator: (value) => controller.validateUsername(),
                           ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   _buildTextField(
                     controller: controller.accountController,
                     hint: "账号 / 手机号",
                     icon: Icons.alternate_email,
                     validator: (value) => controller.validateAccount(),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Obx(
                     () => _buildTextField(
                       controller: controller.passwordController,
@@ -75,12 +73,12 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.h),
 
             // 登录/注册 按钮
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: 56.h,
               child: Obx(
                 () => ElevatedButton(
                   onPressed: controller.isLoading.value
@@ -90,7 +88,7 @@ class LoginPage extends StatelessWidget {
                     backgroundColor: const Color(0xFF009688),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     elevation: 0,
                   ),
@@ -98,8 +96,8 @@ class LoginPage extends StatelessWidget {
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(
                           controller.isLogin.value ? "登录" : "立即注册",
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style: TextStyle(
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -107,7 +105,7 @@ class LoginPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             // 切换模式链接
             Center(
@@ -160,7 +158,7 @@ class LoginPage extends StatelessWidget {
         filled: true,
         fillColor: Colors.grey.shade100,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           borderSide: BorderSide.none,
         ),
       ),

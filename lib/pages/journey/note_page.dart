@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'note_controller.dart';
@@ -13,9 +14,13 @@ class NotePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "AI 寻迹成书",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+          style: TextStyle(
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -29,11 +34,11 @@ class NotePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "选择生成风格",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // 风格选择网格
             _buildStyleGrid(controller),
@@ -44,33 +49,33 @@ class NotePage extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 child: controller.selectedStyle.value == "custom"
                     ? Padding(
-                        padding: const EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.only(top: 20.h),
                         child: TextField(
                           onChanged: (value) =>
                               controller.customPrompt.value = value,
                           maxLines: 3,
                           decoration: InputDecoration(
                             hintText: "在这里输入您的风格需求吧...",
-                            hintStyle: const TextStyle(
-                              fontSize: 14,
+                            hintStyle: TextStyle(
+                              fontSize: 14.sp,
                               color: Colors.grey,
                             ),
                             filled: true,
                             fillColor: Colors.grey.shade50,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                               borderSide: BorderSide(
                                 color: Colors.grey.shade200,
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                               borderSide: BorderSide(
                                 color: Colors.grey.shade200,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                               borderSide: const BorderSide(
                                 color: Color(0xFF009688),
                               ),
@@ -82,12 +87,12 @@ class NotePage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: 32.r),
 
             // 生成按钮
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: 56.h,
               child: Obx(
                 () => ElevatedButton(
                   onPressed: controller.isGenerating.value
@@ -96,16 +101,16 @@ class NotePage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF009688),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                   ),
                   child: controller.isGenerating.value
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
+                      : Text(
                           "开始创作",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -113,7 +118,7 @@ class NotePage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 40),
+            SizedBox(height: 40.h),
 
             // 结果展示区域
             Obx(() {
@@ -134,10 +139,10 @@ class NotePage extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+        crossAxisSpacing: 12.w,
+        mainAxisSpacing: 12.w,
         childAspectRatio: 2.2,
       ),
       itemCount: controller.styleOptions.length,
@@ -148,17 +153,17 @@ class NotePage extends StatelessWidget {
           return GestureDetector(
             onTap: () => controller.selectedStyle.value = style['id']!,
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.r),
               decoration: BoxDecoration(
                 color: isSelected
                     ? const Color(0xFF009688).withOpacity(0.1)
                     : Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
                   color: isSelected
                       ? const Color(0xFF009688)
                       : Colors.transparent,
-                  width: 2,
+                  width: 2.w,
                 ),
               ),
               child: Column(
@@ -176,7 +181,7 @@ class NotePage extends StatelessWidget {
                   ),
                   Text(
                     style['desc']!,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    style: TextStyle(fontSize: 10.sp, color: Colors.grey),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -193,23 +198,23 @@ class NotePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           children: [
-            Icon(Icons.auto_awesome, color: Color(0xFF009688), size: 20),
-            SizedBox(width: 8),
+            Icon(Icons.auto_awesome, color: Color(0xFF009688), size: 20.r),
+            SizedBox(width: 8.w),
             Text(
               "生成结果",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
             color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.r),
             border: Border.all(color: Colors.grey.shade200),
           ),
           child: Obx(
@@ -221,8 +226,8 @@ class NotePage extends StatelessWidget {
                     ? TextField(
                         controller: controller.titleEditController,
                         maxLines: null,
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: TextStyle(
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                         ),
                         decoration: const InputDecoration(
@@ -232,18 +237,18 @@ class NotePage extends StatelessWidget {
                       )
                     : Text(
                         controller.generatedTitle.value,
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: TextStyle(
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                const Divider(height: 32),
+                Divider(height: 32.h),
                 // 正文部分
                 controller.isEditing.value
                     ? TextField(
                         controller: controller.bodyEditController,
                         maxLines: null,
-                        style: const TextStyle(fontSize: 15, height: 1.6),
+                        style: TextStyle(fontSize: 15.sp, height: 1.6),
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "输入内容",
@@ -251,12 +256,12 @@ class NotePage extends StatelessWidget {
                       )
                     : Text(
                         controller.generatedBody.value,
-                        style: const TextStyle(fontSize: 15, height: 1.6),
+                        style: TextStyle(fontSize: 15.sp, height: 1.6),
                       ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 // 标签部分
                 Wrap(
-                  spacing: 8,
+                  spacing: 8.w,
                   children: controller.hashtags
                       .map(
                         (t) => Text(
@@ -270,7 +275,7 @@ class NotePage extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24.h),
         Obx(
           () => Row(
             children: [
@@ -289,7 +294,7 @@ class NotePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16.w),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => controller.shareToClipboard(),
@@ -313,7 +318,7 @@ class NotePage extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Icon(Icons.edit_note, size: 64, color: Colors.grey.shade200),
+          Icon(Icons.edit_note, size: 64.r, color: Colors.grey.shade200),
           const Text(
             "选个风格，让 AI 帮您回忆这段旅程吧",
             style: TextStyle(color: Colors.grey),

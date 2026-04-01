@@ -1,5 +1,6 @@
 import 'package:citytrace/core/utils/metadata_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class AboutView extends StatelessWidget {
@@ -10,11 +11,11 @@ class AboutView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "关于我们",
           style: TextStyle(
             color: Colors.black,
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -23,38 +24,38 @@ class AboutView extends StatelessWidget {
         foregroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new, size: 20.r),
           onPressed: () => Get.back(),
         ),
       ),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 50),
+            SizedBox(height: 50.h),
 
             // 1. Logo 区域
             Center(
               child: Image.asset(
                 'assets/images/citytrace_app_icon.jpg',
-                width: 180,
-                height: 180,
+                width: 180.w,
+                height: 180.w,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
+                  return Icon(
                     Icons.map_rounded,
                     color: Color(0xFF009688),
-                    size: 100,
+                    size: 100.r,
                   );
                 },
               ),
             ),
 
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
 
-            const Text(
+            Text(
               "留下你的城市印记",
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 15.sp,
                 color: Colors.grey,
                 letterSpacing: 0.5,
               ),
@@ -63,13 +64,13 @@ class AboutView extends StatelessWidget {
             const Spacer(), // 自动推开间距
             // 2. 项目介绍
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
                 children: [
                   _buildSloganLine("AI 无界，创见未来。"),
-                  const SizedBox(height: 8), // 两行之间的间距
+                  SizedBox(height: 8.h), // 两行之间的间距
                   _buildSloganLine("CityTrace 陪你深入城市肌理，"),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   _buildSloganLine("把瞬间凝结成永恒。"),
                 ],
               ),
@@ -80,7 +81,7 @@ class AboutView extends StatelessWidget {
             // 3. 底部信息
             _buildFooterSection(),
 
-            const SizedBox(height: 40),
+            SizedBox(height: 40.h),
           ],
         ),
       ),
@@ -92,8 +93,8 @@ class AboutView extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 18,
+      style: TextStyle(
+        fontSize: 18.sp,
         fontWeight: FontWeight.w600,
         color: Color(0xFF009688), // 使用 CityTrace 主题色
         letterSpacing: 1.2,
@@ -107,16 +108,16 @@ class AboutView extends StatelessWidget {
       children: [
         Text(
           "版本号: ${MetadataUtil.version}",
-          style: const TextStyle(color: Colors.black45, fontSize: 13),
+          style: TextStyle(color: Colors.black45, fontSize: 13.sp),
         ),
-        const SizedBox(height: 15),
-        const Text(
+        SizedBox(height: 15.h),
+        Text(
           "Copyright © TraceMakers 迹录者",
-          style: TextStyle(color: Colors.black38, fontSize: 12),
+          style: TextStyle(color: Colors.black38, fontSize: 12.sp),
         ),
-        const Text(
+        Text(
           "All Rights Reserved",
-          style: TextStyle(color: Colors.black26, fontSize: 11),
+          style: TextStyle(color: Colors.black26, fontSize: 11.sp),
         ),
       ],
     );

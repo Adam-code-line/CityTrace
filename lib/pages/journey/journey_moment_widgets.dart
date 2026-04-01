@@ -9,10 +9,10 @@ class MomentBottomSheet {
   }) {
     Get.bottomSheet(
       Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        decoration: const BoxDecoration(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+        decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -24,22 +24,22 @@ class MomentBottomSheet {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: TextStyle(
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
                 IconButton(
                   onPressed: () => Get.back(),
-                  icon: const Icon(Icons.close, size: 20),
+                  icon: Icon(Icons.close, size: 20.r),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             // 业务具体的内容
             child,
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
           ],
         ),
       ),
@@ -55,7 +55,7 @@ class MomentBottomSheet {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: 56.h,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -64,13 +64,13 @@ class MomentBottomSheet {
               : Colors.grey.shade300,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           elevation: 0,
         ),
         child: Text(
           text,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -91,12 +91,12 @@ class MomentBottomSheet {
               filled: true,
               fillColor: Colors.grey.shade50,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.h),
           _buildActionButton("保存瞬间", () {
             controller.onUploadText(textController.text);
             Get.back();
@@ -126,7 +126,7 @@ class MomentBottomSheet {
                     onTap: () => selectedSource.value = ImageSource.camera,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16.w),
                 // 相册导入
                 Expanded(
                   child: _buildSelectableCard(
@@ -139,7 +139,7 @@ class MomentBottomSheet {
               ],
             ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32.h),
           // 动态亮起的动作按钮
           Obx(
             () => _buildActionButton(
@@ -169,28 +169,29 @@ class MomentBottomSheet {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 24),
+        padding: EdgeInsets.symmetric(vertical: 24.h),
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF009688).withOpacity(0.05)
               : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: isSelected ? const Color(0xFF009688) : Colors.transparent,
-            width: 2,
+            width: 2.w,
           ),
         ),
         child: Column(
           children: [
             Icon(
               icon,
-              size: 32,
+              size: 32.r,
               color: isSelected ? const Color(0xFF009688) : Colors.grey,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Text(
               label,
               style: TextStyle(
+                fontSize: 14.sp,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected ? const Color(0xFF009688) : Colors.black54,
               ),
@@ -216,10 +217,10 @@ class MomentBottomSheet {
         () => PopScope(
           canPop: !isRecording.value, // 录制中禁止手势返回
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-            decoration: const BoxDecoration(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+            decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -229,8 +230,8 @@ class MomentBottomSheet {
                   children: [
                     Text(
                       isRecording.value ? "正在记录您的感悟" : "记录现在的声音",
-                      style: const TextStyle(
-                        fontSize: 20,
+                      style: TextStyle(
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -240,19 +241,19 @@ class MomentBottomSheet {
                           Get.back();
                         }
                       },
-                      icon: const Icon(Icons.close, size: 20),
+                      icon: Icon(Icons.close, size: 20.r),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Text(
                   isRecording.value
                       ? "AI 正在倾听..."
                       : (isFinished.value ? "录制完成，点击识别" : "准备好了吗？"),
-                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                 ),
 
-                const SizedBox(height: 48),
+                SizedBox(height: 48.h),
 
                 // 合并控制与动态视效的按钮
                 GestureDetector(
@@ -274,7 +275,7 @@ class MomentBottomSheet {
                   child: _buildMicAnimation(mediaUtil, isRecording.value),
                 ),
 
-                const SizedBox(height: 48),
+                SizedBox(height: 48.h),
 
                 // 提交按钮
                 _buildActionButton(
@@ -312,8 +313,8 @@ class MomentBottomSheet {
         double pulseScale = 1.0 + (active ? (amp + 60) / 100 : 0.0);
 
         return SizedBox(
-          width: 140,
-          height: 140,
+          width: 140.w,
+          height: 140.h,
           child: Stack(
             alignment: Alignment.center,
             clipBehavior: Clip.none,
@@ -324,8 +325,8 @@ class MomentBottomSheet {
                 duration: const Duration(milliseconds: 100),
                 curve: Curves.easeOutCubic, // 使用流畅的缓动曲线
                 child: Container(
-                  width: 110,
-                  height: 110,
+                  width: 110.w,
+                  height: 110.h,
                   decoration: BoxDecoration(
                     color: (active ? Colors.red : const Color(0xFF009688))
                         .withOpacity(0.15),
@@ -337,8 +338,8 @@ class MomentBottomSheet {
               // 中间核心按钮
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 100,
-                height: 100,
+                width: 100.w,
+                height: 100.h,
                 decoration: BoxDecoration(
                   color: active ? Colors.red.shade400 : const Color(0xFF009688),
                   shape: BoxShape.circle,
@@ -346,15 +347,15 @@ class MomentBottomSheet {
                     BoxShadow(
                       color: (active ? Colors.red : const Color(0xFF009688))
                           .withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
+                      blurRadius: 20.r,
+                      offset: Offset(0, 8.h),
                     ),
                   ],
                 ),
                 child: Icon(
                   active ? Icons.stop_rounded : Icons.mic_rounded,
                   color: Colors.white,
-                  size: 48,
+                  size: 48.r,
                 ),
               ),
             ],
@@ -374,19 +375,19 @@ class MomentBottomSheet {
         children: [
           // 静态地图预览区
           Container(
-            height: 200,
+            height: 200.h,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               border: Border.all(color: Colors.grey.shade200),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               child: Obx(() {
                 if (!controller.isMapReadyInSheet.value ||
                     controller.currentPos == null) {
-                  return const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                  return Center(
+                    child: CircularProgressIndicator(strokeWidth: 2.r),
                   );
                 }
 
@@ -401,29 +402,25 @@ class MomentBottomSheet {
             ),
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
 
           // 语义化地址显示
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Row(
               children: [
-                const Icon(
-                  Icons.location_on,
-                  color: Color(0xFF009688),
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
+                Icon(Icons.location_on, color: Color(0xFF009688), size: 20.r),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: Obx(
                     () => Text(
                       controller.currentAddress.value,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: 14.sp,
                         color: Colors.black87,
                         fontWeight: FontWeight.w500,
                       ),
@@ -434,7 +431,7 @@ class MomentBottomSheet {
             ),
           ),
 
-          const SizedBox(height: 32),
+          SizedBox(height: 32.h),
 
           // 确认按钮
           _buildActionButton("确认打卡", () {
@@ -472,13 +469,13 @@ class MomentCard {
         GestureDetector(
           onLongPress: () => _showImageOptions(controller, moment.media!),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             child: Image.network(
               moment.media!,
               fit: BoxFit.cover,
               width: double.infinity,
               errorBuilder: (c, e, s) => Container(
-                height: 150,
+                height: 150.h,
                 color: Colors.grey.shade100,
                 child: const Icon(
                   Icons.broken_image_outlined,
@@ -489,12 +486,12 @@ class MomentCard {
           ),
         ),
         if (moment.mediaDescription != null) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
               color: const Color(0xFF009688).withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
                 color: const Color(0xFF009688).withOpacity(0.1),
               ),
@@ -502,13 +499,13 @@ class MomentCard {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("✨", style: TextStyle(fontSize: 14)),
-                const SizedBox(width: 8),
+                Text("✨", style: TextStyle(fontSize: 14.sp)),
+                SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
                     moment.mediaDescription!,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       color: Colors.teal.shade800,
                       height: 1.5,
                       fontStyle: FontStyle.italic,
@@ -537,12 +534,12 @@ class MomentCard {
         // ASR 转写文本
         if (moment.mediaDescription != null &&
             moment.mediaDescription!.isNotEmpty) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
               color: const Color(0xFF009688).withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
                 color: const Color(0xFF009688).withOpacity(0.1),
               ),
@@ -550,13 +547,13 @@ class MomentCard {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("✨", style: TextStyle(fontSize: 14)),
-                const SizedBox(width: 8),
+                Text("✨", style: TextStyle(fontSize: 14.sp)),
+                SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
                     moment.mediaDescription!,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       color: Colors.teal.shade800,
                       height: 1.5,
                       fontStyle: FontStyle.italic,
@@ -574,8 +571,8 @@ class MomentCard {
   static Widget _buildTextContent(MomentModel moment) {
     return Text(
       moment.context ?? "",
-      style: const TextStyle(
-        fontSize: 15,
+      style: TextStyle(
+        fontSize: 15.sp,
         height: 1.6,
         color: Colors.black87,
         letterSpacing: 0.2,
@@ -587,29 +584,26 @@ class MomentCard {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(10.r),
           decoration: BoxDecoration(
             color: Colors.blue.shade50,
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.location_on, color: Colors.blue, size: 24),
+          child: Icon(Icons.location_on, color: Colors.blue, size: 24.r),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 moment.location.name ?? "未知地点",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2.h),
               Text(
                 "${moment.location.lat}, ${moment.location.lon}",
-                style: const TextStyle(fontSize: 11, color: Colors.grey),
+                style: TextStyle(fontSize: 11.sp, color: Colors.grey),
               ),
             ],
           ),
@@ -649,7 +643,7 @@ class MomentCard {
               },
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
           ],
         ),
       ),
@@ -768,15 +762,15 @@ class _AudioMomentPlayerState extends State<AudioMomentPlayer> {
     // 根据状态决定图标
     Widget playIcon;
     if (_hasError) {
-      playIcon = const Icon(Icons.error_outline, color: Colors.red, size: 32);
+      playIcon = Icon(Icons.error_outline, color: Colors.red, size: 32.r);
     } else if (_isLoading) {
-      playIcon = const SizedBox(
-        width: 32,
-        height: 32,
+      playIcon = SizedBox(
+        width: 32.w,
+        height: 32.w,
         child: Padding(
-          padding: EdgeInsets.all(4.0),
+          padding: EdgeInsets.all(4.r),
           child: CircularProgressIndicator(
-            strokeWidth: 2,
+            strokeWidth: 2.r,
             color: Colors.orange,
           ),
         ),
@@ -785,20 +779,20 @@ class _AudioMomentPlayerState extends State<AudioMomentPlayer> {
       playIcon = Icon(
         _isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
         color: Colors.orange,
-        size: 32,
+        size: 32.r,
       );
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: _hasError ? Colors.red.shade50 : Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
           GestureDetector(onTap: _togglePlay, child: playIcon),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -806,20 +800,20 @@ class _AudioMomentPlayerState extends State<AudioMomentPlayer> {
                 Text(
                   _hasError ? "资源加载失败" : "录音",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: _hasError ? Colors.red : Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 // 动态波形图
                 Row(
                   children: List.generate(15, (index) {
                     // 如果正在播放，让波形随机跳动，否则保持静止
                     return AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      margin: const EdgeInsets.only(right: 2),
-                      width: 3,
+                      margin: EdgeInsets.only(right: 2.w),
+                      width: 3.w,
                       height: _isPlaying
                           ? (index % 3 + 2) * (index.isEven ? 2.0 : 4.0)
                           : (index % 3 + 2) * 3.0,
@@ -827,7 +821,7 @@ class _AudioMomentPlayerState extends State<AudioMomentPlayer> {
                         color: Colors.orange.withOpacity(
                           _isPlaying ? 0.8 : 0.4,
                         ),
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(2.r),
                       ),
                     );
                   }),
@@ -844,7 +838,7 @@ class _AudioMomentPlayerState extends State<AudioMomentPlayer> {
                       ? "00:00"
                       : _formatDuration(_duration)),
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 12.sp,
               color: _hasError ? Colors.grey : Colors.orange,
             ),
           ),

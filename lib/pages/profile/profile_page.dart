@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'profile_controller.dart';
@@ -19,26 +20,26 @@ class ProfilePage extends StatelessWidget {
           // 统计数据卡片
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 0), // 增加顶部间距
+              padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 0.h), // 增加顶部间距
               child: _buildStatsCard(),
             ),
           ),
           // 功能列表
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
               child: _buildFunctionList(),
             ),
           ),
           // 退出登录按钮
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
               child: _buildSignOutButton(),
             ),
           ),
           // 底部空白区域
-          const SliverToBoxAdapter(child: SizedBox(height: 60)),
+          SliverToBoxAdapter(child: SizedBox(height: 60.h)),
         ],
       ),
     );
@@ -53,13 +54,13 @@ class ProfilePage extends StatelessWidget {
 
       return Container(
         width: double.infinity,
-        height: 250, // 总高度包含背景和头像区域
+        height: 250.h, // 总高度包含背景和头像区域
         child: Stack(
           children: [
             // 背景区域（在底层）
             Container(
               width: double.infinity,
-              height: 200, // 背景高度
+              height: 200.h, // 背景高度
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -74,11 +75,11 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   // 装饰性图案
                   Positioned(
-                    bottom: -20,
-                    right: -20,
+                    bottom: -20.h,
+                    right: -20.h,
                     child: Container(
-                      width: 200,
-                      height: 200,
+                      width: 200.w,
+                      height: 200.h,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white.withOpacity(0.1),
@@ -86,11 +87,11 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    top: 30,
-                    left: -50,
+                    top: 30.h,
+                    left: -50.w,
                     child: Container(
-                      width: 150,
-                      height: 150,
+                      width: 150.w,
+                      height: 150.h,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white.withOpacity(0.05),
@@ -99,22 +100,22 @@ class ProfilePage extends StatelessWidget {
                   ),
                   // 用户昵称在右下角
                   Positioned(
-                    bottom: 10,
-                    right: 24,
+                    bottom: 10.h,
+                    right: 24.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                           user?.username ?? "探索者",
-                          style: const TextStyle(
-                            fontSize: 24,
+                          style: TextStyle(
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             shadows: [
                               Shadow(
-                                blurRadius: 8,
+                                blurRadius: 8.r,
                                 color: Colors.black26,
-                                offset: Offset(1, 1),
+                                offset: Offset(1.w, 1.h),
                               ),
                             ],
                           ),
@@ -125,11 +126,11 @@ class ProfilePage extends StatelessWidget {
                             _showEditProfileDialog();
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            padding: EdgeInsets.symmetric(vertical: 4.h),
                             child: Text(
                               "修改个人信息",
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 color: Colors.white.withOpacity(0.8),
                                 decoration: TextDecoration.underline,
                                 decorationColor: Colors.white.withOpacity(0.6),
@@ -145,33 +146,33 @@ class ProfilePage extends StatelessWidget {
             ),
             // 用户头像（在最上层，覆盖在背景上）
             Positioned(
-              top: 140, // 头像底部与背景底部对齐
-              left: 24,
+              top: 140.h, // 头像底部与背景底部对齐
+              left: 24.w,
               child: GestureDetector(
                 onTap: () {
                   final controller = Get.find<ProfileController>();
                   controller.updateAvatar();
                 },
                 child: Container(
-                  width: 95,
-                  height: 95,
-                  padding: const EdgeInsets.all(4),
+                  width: 95.w,
+                  height: 95.h,
+                  padding: EdgeInsets.all(4.r),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                        spreadRadius: 1,
+                        blurRadius: 12.r,
+                        offset: Offset(0, 4.h),
+                        spreadRadius: 1.r,
                       ),
                     ],
                   ),
                   child: Stack(
                     children: [
                       CircleAvatar(
-                        radius: 44,
+                        radius: 44.r,
                         backgroundColor: Colors.white,
                         backgroundImage: NetworkImage(
                           user?.avatar ??
@@ -183,16 +184,16 @@ class ProfilePage extends StatelessWidget {
                         bottom: 0,
                         right: 0,
                         child: Container(
-                          width: 28,
-                          height: 28,
+                          width: 28.w,
+                          height: 28.h,
                           decoration: BoxDecoration(
                             color: const Color(0xFF009688),
                             shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
+                            border: Border.all(color: Colors.white, width: 2.w),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.edit,
-                            size: 14,
+                            size: 14.r,
                             color: Colors.white,
                           ),
                         ),
@@ -204,29 +205,29 @@ class ProfilePage extends StatelessWidget {
             ),
             // 返回按钮（左上角）
             Positioned(
-              top: 50,
-              left: 16,
+              top: 50.h,
+              left: 16.w,
               child: GestureDetector(
                 onTap: () {
                   Get.back(); // 返回上级页面
                 },
                 child: Container(
-                  width: 40,
-                  height: 40,
+                  width: 40.w,
+                  height: 40.h,
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(120, 192, 192, 192),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                        blurRadius: 8.r,
+                        offset: Offset(0, 2.h),
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_back_ios_new_rounded,
-                    size: 20,
+                    size: 20.r,
                     color: Color(0xFF00695C),
                   ),
                 ),
@@ -246,15 +247,15 @@ class ProfilePage extends StatelessWidget {
       if (controller.isLoadingStats.value) {
         return Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24.r),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+                blurRadius: 12.r,
+                offset: Offset(0, 4.h),
               ),
             ],
           ),
@@ -266,21 +267,21 @@ class ProfilePage extends StatelessWidget {
 
       return Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.r),
         decoration: BoxDecoration(
           color: const Color(0xFF00695C), // 深绿色
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
               color: const Color(0xFF00695C).withOpacity(0.3),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
+              blurRadius: 16.r,
+              offset: Offset(0, 6.h),
             ),
           ],
         ),
         child: Column(
           children: [
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -291,8 +292,8 @@ class ProfilePage extends StatelessWidget {
                 ),
                 // 第一条竖线分割线
                 Container(
-                  width: 1,
-                  height: 40,
+                  width: 1.w,
+                  height: 40.h,
                   color: Colors.white.withOpacity(0.3),
                 ),
                 _buildStatItem(
@@ -302,8 +303,8 @@ class ProfilePage extends StatelessWidget {
                 ),
                 // 第二条竖线分割线
                 Container(
-                  width: 1,
-                  height: 40,
+                  width: 1.w,
+                  height: 40.h,
                   color: Colors.white.withOpacity(0.3),
                 ),
                 _buildStatItem(
@@ -355,22 +356,22 @@ class ProfilePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white70, size: 16), // 图标用次淡白色
-            const SizedBox(width: 4),
+            Icon(icon, color: Colors.white70, size: 16.r), // 图标用次淡白色
+            SizedBox(width: 4.w),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 12,
+              style: TextStyle(
+                fontSize: 12.sp,
                 color: Colors.white70, // 文字用次淡白色
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 18,
+          style: TextStyle(
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
             color: Colors.white, // 数据用白色
           ),
@@ -390,7 +391,7 @@ class ProfilePage extends StatelessWidget {
           Icons.edit_outlined,
           () => Get.toNamed('/note'),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h),
         _buildFunctionItem(
           Icons.favorite_outline,
           "收藏瞬间",
@@ -415,56 +416,53 @@ class ProfilePage extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+            padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 0),
             decoration: const BoxDecoration(color: Colors.white),
             child: Row(
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 48.w,
+                  height: 48.h,
                   decoration: BoxDecoration(
                     color: const Color(0xFF009688).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Icon(leftIcon, color: const Color(0xFF009688)),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           color: Colors.black87,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Text(
                         subtitle,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 13.sp, color: Colors.grey),
                       ),
                     ],
                   ),
                 ),
                 Icon(rightIcon, color: Colors.grey.shade400),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Icon(
                   Icons.chevron_right,
                   color: Colors.grey.shade300,
-                  size: 24,
+                  size: 24.r,
                 ),
               ],
             ),
           ),
         ),
         // 下分割线
-        Container(height: 1, color: Colors.grey.shade200),
+        Container(height: 1.h, color: Colors.grey.shade200),
       ],
     );
   }
@@ -481,7 +479,7 @@ class ProfilePage extends StatelessWidget {
       title: "修改个人信息",
       content: Column(
         children: [
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           TextField(
             controller: usernameController,
             decoration: const InputDecoration(
@@ -491,7 +489,7 @@ class ProfilePage extends StatelessWidget {
             ),
             maxLength: 20,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -540,7 +538,7 @@ class ProfilePage extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: 56.h,
       child: ElevatedButton(
         onPressed: () {
           // 显示确认对话框
@@ -570,14 +568,14 @@ class ProfilePage extends StatelessWidget {
           elevation: 4,
           shadowColor: Colors.red.withOpacity(0.3),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, size: 20),
-            SizedBox(width: 8),
+            Icon(Icons.logout, size: 20.r),
+            SizedBox(width: 8.w),
             Text(
               "Sign Out",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
           ],
         ),

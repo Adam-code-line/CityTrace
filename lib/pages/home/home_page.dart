@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
@@ -18,22 +19,23 @@ class HomePage extends StatelessWidget {
       drawer: _buildLeftDrawer(), // 侧拉菜单
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               _buildTopBar(), // Header
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               _buildWelcomeSection(), // 欢迎语
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               _buildContextSection(), // 环境信息
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               _buildHeroCard(), // 行程状态信息
-              const SizedBox(height: 32),
+              SizedBox(height: 32.h),
               _buildRecentTripsTitle(), // 最近行程标题
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               _buildRecentTripsSection(), // 最近行程信息
+              SizedBox(height: 48.h), // 留出 FAB 空间，避免遮挡行程信息
             ],
           ),
         ),
@@ -47,10 +49,10 @@ class HomePage extends StatelessWidget {
     HomeController controller = Get.find<HomeController>();
     return Drawer(
       width: Get.width * 0.8,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topRight: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+          topRight: Radius.circular(32.r),
+          bottomRight: Radius.circular(32.r),
         ),
       ),
       child: Column(
@@ -60,7 +62,7 @@ class HomePage extends StatelessWidget {
           // 菜单列表
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               children: [
                 _buildDrawerItem(
                   Icons.person_outline,
@@ -98,7 +100,7 @@ class HomePage extends StatelessWidget {
             () => controller.logout(),
             color: Colors.red,
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32.h),
         ],
       ),
     );
@@ -116,7 +118,7 @@ class HomePage extends StatelessWidget {
       bool hasValidAvatar = avatarUrl != null && avatarUrl.isNotEmpty;
 
       return Container(
-        padding: const EdgeInsets.fromLTRB(24, 80, 24, 32),
+        padding: EdgeInsets.fromLTRB(24.w, 80.h, 24.w, 32.h),
         color: const Color(0xFF009688),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,13 +126,13 @@ class HomePage extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 36,
+                  radius: 36.r,
                   backgroundColor: Colors.white24,
                   backgroundImage: NetworkImage(
                     hasValidAvatar ? avatarUrl : defaultAvatar,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,9 +141,9 @@ class HomePage extends StatelessWidget {
                         controller.currentUser?.username ?? "探索者",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -151,7 +153,7 @@ class HomePage extends StatelessWidget {
                         maxLines: 1,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ],
@@ -159,7 +161,7 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
           ],
         ),
       );
@@ -176,9 +178,9 @@ class HomePage extends StatelessWidget {
       leading: Icon(icon, color: color ?? Colors.black87),
       title: Text(
         title,
-        style: TextStyle(color: color ?? Colors.black87, fontSize: 16),
+        style: TextStyle(color: color ?? Colors.black87, fontSize: 16.sp),
       ),
-      trailing: const Icon(Icons.chevron_right, size: 20),
+      trailing: Icon(Icons.chevron_right, size: 20.r),
       onTap: onTap,
     );
   }
@@ -194,18 +196,18 @@ class HomePage extends StatelessWidget {
             () => Row(
               children: [
                 CircleAvatar(
-                  radius: 24,
+                  radius: 24.r,
                   backgroundImage: NetworkImage(
                     controller.currentUser?.avatar ??
                         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
                   ),
                 ),
                 if (!controller.isLoggedIn) ...[
-                  const SizedBox(width: 12),
-                  const Text(
+                  SizedBox(width: 12.w),
+                  Text(
                     "未登录",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.black54,
                     ),
@@ -217,9 +219,9 @@ class HomePage extends StatelessWidget {
         ),
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_horiz, color: Colors.black54),
-          offset: const Offset(0, 50),
+          offset: Offset(0, 50.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           onSelected: (value) {
             if (value == 'about') {
@@ -249,8 +251,8 @@ class HomePage extends StatelessWidget {
       value: value,
       child: Row(
         children: [
-          Icon(icon, size: 20, color: Colors.black87),
-          const SizedBox(width: 12),
+          Icon(icon, size: 20.r, color: Colors.black87),
+          SizedBox(width: 12.w),
           Text(title),
         ],
       ),
@@ -265,11 +267,11 @@ class HomePage extends StatelessWidget {
         children: [
           Text(
             "Hi, ${controller.currentUser?.username ?? '探索者'}",
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold),
           ),
-          const Text(
+          Text(
             "今天准备去哪里留下印记？",
-            style: TextStyle(fontSize: 18, color: Colors.grey),
+            style: TextStyle(fontSize: 18.sp, color: Colors.grey),
           ),
         ],
       ),
@@ -281,18 +283,18 @@ class HomePage extends StatelessWidget {
     return Obx(
       () => Row(
         children: [
-          const Icon(Icons.location_on_outlined, size: 18, color: Colors.grey),
-          const SizedBox(width: 4),
+          Icon(Icons.location_on_outlined, size: 18.r, color: Colors.grey),
+          SizedBox(width: 4.w),
           Text(
             controller.locationDisplay.value,
-            style: const TextStyle(color: Colors.grey, fontSize: 14),
+            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
           ),
-          const SizedBox(width: 16),
-          const Icon(Icons.wb_cloudy_outlined, size: 18, color: Colors.grey),
-          const SizedBox(width: 4),
+          SizedBox(width: 16.w),
+          Icon(Icons.wb_cloudy_outlined, size: 18.r, color: Colors.grey),
+          SizedBox(width: 4.w),
           Text(
             controller.weatherDisplay.value,
-            style: const TextStyle(color: Colors.grey, fontSize: 14),
+            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
           ),
         ],
       ),
@@ -317,42 +319,42 @@ class HomePage extends StatelessWidget {
     return Container(
       key: const ValueKey("active_card"),
       width: double.infinity,
-      height: 240,
-      padding: const EdgeInsets.all(24),
+      height: 240.h,
+      padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(32.r),
         color: const Color(0xFF009688), // 使用主题色作为背景
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF009688).withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            blurRadius: 15.r,
+            offset: Offset(0, 8.h),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "当前正在行程中",
-            style: TextStyle(color: Colors.white70, fontSize: 16),
+            style: TextStyle(color: Colors.white70, fontSize: 16.sp),
           ),
           const Spacer(),
-          const Text(
+          Text(
             "漫游探索城市中...",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Obx(
             () => Text(
               "已持续：${controller.duration}",
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white70,
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontFamily: 'monospace',
               ),
               // 使用 monospace 字体可以防止数字变动时文字左右跳动
@@ -367,7 +369,7 @@ class HomePage extends StatelessWidget {
                 backgroundColor: Colors.white,
                 foregroundColor: const Color(0xFF009688),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 elevation: 0,
               ),
@@ -386,9 +388,9 @@ class HomePage extends StatelessWidget {
     return Container(
       key: const ValueKey("empty_card"),
       width: double.infinity,
-      height: 240,
+      height: 240.h,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(32.r),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -400,23 +402,19 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
               color: const Color(0xFF009688),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
             ),
-            child: const Icon(
-              Icons.map_outlined,
-              color: Colors.white,
-              size: 40,
-            ),
+            child: Icon(Icons.map_outlined, color: Colors.white, size: 40.r),
           ),
-          const SizedBox(height: 16),
-          const Text(
+          SizedBox(height: 16.h),
+          Text(
             "尚未开始行程",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           const Text("点击下方按钮并开始探索你的足迹", style: TextStyle(color: Colors.grey)),
         ],
       ),
@@ -424,9 +422,9 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildRecentTripsTitle() {
-    return const Text(
+    return Text(
       "最近的旅程",
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
     );
   }
 
@@ -442,9 +440,9 @@ class HomePage extends StatelessWidget {
       }
 
       if (controller.isLoadingRecent.value) {
-        return const SizedBox(
-          height: 150,
-          child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+        return SizedBox(
+          height: 150.h,
+          child: Center(child: CircularProgressIndicator(strokeWidth: 2.r)),
         );
       }
 
@@ -458,7 +456,7 @@ class HomePage extends StatelessWidget {
 
       // 最近行程展示
       return SizedBox(
-        height: 220,
+        height: 220.h,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: controller.recentTrips.length,
@@ -472,15 +470,15 @@ class HomePage extends StatelessWidget {
   Widget _buildRecentTripPlaceholder(IconData icon, String label) {
     return SizedBox(
       width: double.infinity,
-      height: 150,
+      height: 150.h,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 40, color: Colors.grey.shade300),
-          const SizedBox(height: 12),
+          Icon(icon, size: 40.r, color: Colors.grey.shade300),
+          SizedBox(height: 12.h),
           Text(
             label,
-            style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+            style: TextStyle(color: Colors.grey.shade400, fontSize: 14.sp),
           ),
         ],
       ),
@@ -492,19 +490,19 @@ class HomePage extends StatelessWidget {
     return GestureDetector(
       onTap: () => Get.toNamed('/journey', arguments: journeyId),
       child: Container(
-        width: 140,
-        margin: const EdgeInsets.only(right: 16),
+        width: 140.w,
+        margin: EdgeInsets.only(right: 16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
               tag: "journey_cover_$journeyId", // 确保 tag 全局唯一且两页一致
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 child: Image.network(
                   trip['img']!,
-                  height: 140,
-                  width: 140,
+                  height: 140.w,
+                  width: 140.w,
                   fit: BoxFit.cover,
                   errorBuilder: (c, e, s) {
                     return Container(
@@ -512,39 +510,39 @@ class HomePage extends StatelessWidget {
                       width: 140,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Icon(
                         Icons.image_not_supported_outlined,
                         color: Colors.grey.shade300,
-                        size: 40,
+                        size: 40.r,
                       ),
                     );
                   },
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Container(
-                      height: 140,
-                      width: 140,
+                      height: 140.h,
+                      width: 140.h,
                       color: Colors.grey.shade50,
-                      child: const Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                      child: Center(
+                        child: CircularProgressIndicator(strokeWidth: 2.r),
                       ),
                     );
                   },
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               trip['title']!,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
               maxLines: 1, // 防止标题过长撑开布局
               overflow: TextOverflow.ellipsis,
             ),
             Text(
               trip['date']!,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(color: Colors.grey, fontSize: 12.sp),
             ),
           ],
         ),
@@ -560,32 +558,36 @@ class HomePage extends StatelessWidget {
         return Hero(
           tag: "journey_fab",
           child: Container(
-            width: 48,
-            height: 48,
+            width: 48.r,
+            height: 48.r,
             color: Colors.transparent, // 透明
           ),
         );
       }
 
-      return FloatingActionButton.large(
-        heroTag: "journey_fab",
-        onPressed: () {
-          if (controller.isLoggedIn) {
-            controller.startMapLoadingTimer();
-            Get.bottomSheet(
-              _buildConfirmBottomSheet(),
-              isScrollControlled: true,
-            );
-          } else {
-            controller.handleUnlogFabClick();
-          }
-        },
-        backgroundColor: const Color(0xFF009688),
-        shape: const CircleBorder(),
-        child: const Icon(
-          Icons.play_arrow_rounded,
-          color: Colors.white,
-          size: 48,
+      return SizedBox(
+        width: 100.w,
+        height: 100.w,
+        child: FloatingActionButton(
+          heroTag: "journey_fab",
+          onPressed: () {
+            if (controller.isLoggedIn) {
+              controller.startMapLoadingTimer();
+              Get.bottomSheet(
+                _buildConfirmBottomSheet(),
+                isScrollControlled: true,
+              );
+            } else {
+              controller.handleUnlogFabClick();
+            }
+          },
+          backgroundColor: const Color(0xFF009688),
+          shape: const CircleBorder(),
+          child: Icon(
+            Icons.play_arrow_rounded,
+            color: Colors.white,
+            size: 48.r,
+          ),
         ),
       );
     });
@@ -594,71 +596,71 @@ class HomePage extends StatelessWidget {
   Widget _buildConfirmBottomSheet() {
     HomeController controller = Get.find<HomeController>();
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.all(24.r),
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min, // 弹窗高度自适应
         children: [
-          const Text(
+          Text(
             "准备好出发了吗？",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
 
           // 弹窗内的地图预览区
           Container(
-            height: 200,
+            height: 200.h,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               border: Border.all(color: Colors.grey.shade200),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               child: Obx(() {
                 if (!controller.isMapReadyInSheet.value ||
                     controller.currentPos == null) {
-                  return const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                  return Center(
+                    child: CircularProgressIndicator(strokeWidth: 2.r),
                   );
                 }
 
                 return ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                   child: MapView(center: controller.currentPos),
                 );
               }),
             ),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24.h),
 
           // 立即出发按钮
           SizedBox(
             width: double.infinity,
-            height: 56,
+            height: 56.h,
             child: ElevatedButton(
               onPressed: () => controller.onStartJourneyConfirmed(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF009688),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 elevation: 0,
               ),
-              child: const Text(
+              child: Text(
                 "立即出发",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
         ],
       ),
     );
