@@ -1,4 +1,6 @@
 import 'package:citytrace/controllers/user_controller.dart';
+import 'package:citytrace/mock/mock_config.dart';
+import 'package:citytrace/mock/mock_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
@@ -26,6 +28,11 @@ class ApiClient {
     );
 
     dio = Dio(options);
+
+    // 如果启用 Mock 模式，优先添加 Mock 拦截器
+    if (MockConfig.enableMock) {
+      dio.interceptors.add(MockInterceptor());
+    }
 
     dio.interceptors.add(
       InterceptorsWrapper(
