@@ -225,10 +225,10 @@ class HomePage extends StatelessWidget {
           ),
           onSelected: (value) {
             if (value == 'about') {
-              // 如果点击的是关于我们，就跳转
               Get.toNamed('/about');
+            } else if (value == 'settings') {
+              Get.toNamed('/setting');
             } else {
-              // 其他项暂时还是弹个窗
               Fluttertoast.showToast(msg: "点击了 $value");
             }
           },

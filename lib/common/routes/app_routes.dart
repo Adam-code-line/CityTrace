@@ -7,6 +7,7 @@ import '../../pages/home/home_page.dart';
 import '../../pages/journey/journey_detail_page.dart';
 import '../../pages/journey/note_page.dart';
 import '../../pages/about/about_view.dart';
+import '../../pages/setting/setting_page.dart';
 
 class AppPages {
   static const INITIAL = '/';
@@ -20,5 +21,6 @@ class AppPages {
     GetPage(name: '/list', page: () => const ListPage()),
     GetPage(name: '/profile', page: () => const ProfilePage()),
     GetPage(name: '/about', page: () => const AboutView()),
+    GetPage(name: '/setting', page: () => const SettingPage()),
   ];
 }
