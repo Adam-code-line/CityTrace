@@ -15,9 +15,6 @@ JourneyModel _$JourneyModelFromJson(Map<String, dynamic> json) => JourneyModel(
       startTime: json['startTime'] as String,
       endTime: json['endTime'] as String?,
       folderId: json['folderId'] as String?,
-      folderIds: (json['folderIds'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
       moments: (json['moments'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -33,6 +30,5 @@ Map<String, dynamic> _$JourneyModelToJson(JourneyModel instance) =>
       'startTime': instance.startTime,
       'endTime': instance.endTime,
       'folderId': instance.folderId,
-      'folderIds': instance.folderIds,
       'moments': instance.moments,
     };

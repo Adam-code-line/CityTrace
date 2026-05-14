@@ -36,15 +36,13 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
   @override
   Widget build(BuildContext context) {
     final journey = widget.journey;
-    final currentFolderIds = journey.getAllFolderIds();
+    final hasFolder = journey.folderId != null;
 
     // 卡片自身的偏移 = 完整拖拽距离
     final cardOffset = _dragX;
 
-    // 内部的视差偏移系数（增大系数使视差更明显）
-    // 背景层（图片）：向左大幅移动 0.5x
+    // 视差偏移系数
     final bgOffset = -_dragX * 0.5;
-    // 前景层（遮罩+日期文字）：向右大幅移动 0.9x
     final fgOffset = _dragX * 0.9;
 
     return GestureDetector(
@@ -77,12 +75,8 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
         clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
-            // 视差封面区域：图片（背景层）和遮罩/日期（前景层）
             _buildParallaxCover(journey, bgOffset, fgOffset),
-
-            // 卡片下半部分：信息
-            _buildInfoSection(journey, currentFolderIds),
-
+            _buildInfoSection(journey, hasFolder),
             // 底部：右滑提示
             Container(
               padding: EdgeInsets.only(bottom: 8.h),
@@ -92,7 +86,7 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
                   Icon(Icons.swipe, size: 14.r, color: Colors.grey.shade300),
                   SizedBox(width: 4.w),
                   Text(
-                    currentFolderIds.isNotEmpty ? "右滑重新归类" : "右滑归类到文件夹",
+                    hasFolder ? "右滑重新归类" : "右滑归类到文件夹",
                     style: TextStyle(
                       fontSize: 10.sp,
                       color: Colors.grey.shade300,
@@ -107,7 +101,6 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
     );
   }
 
-  /// 视差封面：图片（背景层）缓慢左移，遮罩+日期（前景层）快速右移
   Widget _buildParallaxCover(
       JourneyModel journey, double bgOffset, double fgOffset) {
     return ClipRRect(
@@ -117,7 +110,6 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
         width: double.infinity,
         child: Stack(
           children: [
-            // 背景层：封面图片（向左慢速移动）
             Positioned(
               left: bgOffset,
               top: 0,
@@ -134,7 +126,6 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
                 ),
               ),
             ),
-            // 前景层：渐隐遮罩 + 日期文字（向右快速移动）
             Positioned(
               left: fgOffset,
               right: 0,
@@ -169,9 +160,16 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
     );
   }
 
-  /// 信息区域
-  Widget _buildInfoSection(
-      JourneyModel journey, List<String> currentFolderIds) {
+  Widget _buildInfoSection(JourneyModel journey, bool hasFolder) {
+    // 查找当前所属的文件夹名称
+    String? folderName;
+    if (hasFolder && journey.folderId != null) {
+      final folder = widget.folders.firstWhereOrNull(
+        (f) => f.folderId == journey.folderId,
+      );
+      folderName = folder?.name;
+    }
+
     return Padding(
       padding: EdgeInsets.all(16.r),
       child: Column(
@@ -193,40 +191,26 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
             ],
           ),
           SizedBox(height: 4.h),
-          if (currentFolderIds.isNotEmpty)
+          if (folderName != null)
             Row(
               children: [
-                ...currentFolderIds.take(2).map((fid) {
-                  final folder = widget.folders.firstWhereOrNull(
-                    (f) => f.folderId == fid,
-                  );
-                  if (folder == null) return const SizedBox.shrink();
-                  return Padding(
-                    padding: EdgeInsets.only(right: 6.w),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF009688).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Text(
-                        folder.name,
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: const Color(0xFF009688),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-                if (currentFolderIds.length > 2)
-                  Text(
-                    "+${currentFolderIds.length - 2}",
-                    style: TextStyle(fontSize: 10.sp, color: Colors.grey),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 2.h,
                   ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF009688).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Text(
+                    folderName,
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: const Color(0xFF009688),
+                    ),
+                  ),
+                ),
               ],
             ),
         ],

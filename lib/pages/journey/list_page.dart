@@ -138,8 +138,13 @@ class ListPage extends GetView<ListController> {
       journey: journey,
       folders: controller.folders,
       onCreateFolder: (name) => controller.createFolder(name),
-      onConfirm: (journeyId, folderIds) =>
-          controller.setJourneyFolders(journeyId, folderIds),
+      onConfirm: (journeyId, folderId) {
+        if (folderId != null) {
+          controller.moveJourney(journeyId, folderId);
+        } else {
+          controller.removeJourneyFromFolder(journeyId, journey.folderId ?? '');
+        }
+      },
     );
   }
 
@@ -182,15 +187,16 @@ class ListPage extends GetView<ListController> {
                 _showClassifySheet(journey);
               },
             ),
-            if (journey.getAllFolderIds().isNotEmpty)
+            if (journey.folderId != null)
               ListTile(
                 leading: const Icon(Icons.folder_off_outlined,
                     color: Colors.orange),
-                title: const Text("从所有文件夹移出",
+                title: const Text("移出文件夹",
                     style: TextStyle(color: Colors.orange)),
                 onTap: () {
                   Get.back();
-                  controller.setJourneyFolders(journey.journeyId, []);
+                  controller.removeJourneyFromFolder(
+                      journey.journeyId, journey.folderId!);
                 },
               ),
             ListTile(

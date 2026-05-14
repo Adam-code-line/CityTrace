@@ -5,15 +5,12 @@ import 'package:get/get.dart';
 import '../models/journey_model.dart';
 import '../models/folder_model.dart';
 
-/// 行程归类 BottomSheet — 文件夹通过 getX 响应式自动刷新
-/// so that newly created folders show up immediately
+/// 行程归类 BottomSheet（单文件夹选择）
 class ClassifySheet extends StatefulWidget {
   final JourneyModel journey;
   final RxList<FolderModel> folders;
   final Future<void> Function(String name) onCreateFolder;
-  final Future<void> Function(String journeyId, List<String> folderIds)
-      onConfirm;
-  final VoidCallback? onFoldersChanged; // called after create/refresh
+  final void Function(String journeyId, String? folderId) onConfirm;
 
   const ClassifySheet({
     super.key,
@@ -21,17 +18,13 @@ class ClassifySheet extends StatefulWidget {
     required this.folders,
     required this.onCreateFolder,
     required this.onConfirm,
-    this.onFoldersChanged,
   });
 
-  /// 弹出归类面板 — folders 为 RxList，创建后自动刷新
   static Future<void> show({
     required JourneyModel journey,
     required RxList<FolderModel> folders,
     required Future<void> Function(String name) onCreateFolder,
-    required Future<void> Function(String journeyId, List<String> folderIds)
-        onConfirm,
-    VoidCallback? onFoldersChanged,
+    required void Function(String journeyId, String? folderId) onConfirm,
   }) {
     return Get.bottomSheet(
       ClassifySheet(
@@ -39,7 +32,6 @@ class ClassifySheet extends StatefulWidget {
         folders: folders,
         onCreateFolder: onCreateFolder,
         onConfirm: onConfirm,
-        onFoldersChanged: onFoldersChanged,
       ),
       isScrollControlled: true,
     );
@@ -50,13 +42,13 @@ class ClassifySheet extends StatefulWidget {
 }
 
 class _ClassifySheetState extends State<ClassifySheet> {
-  late List<String> _selectedIds;
+  String? _selectedId;
   final _textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _selectedIds = List<String>.from(widget.journey.getAllFolderIds());
+    _selectedId = widget.journey.folderId;
   }
 
   @override
@@ -76,7 +68,6 @@ class _ClassifySheetState extends State<ClassifySheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 标题
           Padding(
             padding: EdgeInsets.all(20.r),
             child: Row(
@@ -106,7 +97,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
           ),
           Divider(height: 1.h),
 
-          // 文件夹列表 — 使用 Obx 监听 RxList 变化
+          // 文件夹列表
           Expanded(
             child: Obx(() {
               if (widget.folders.isEmpty) {
@@ -114,14 +105,17 @@ class _ClassifySheetState extends State<ClassifySheet> {
               }
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: widget.folders.length,
-                itemBuilder: (context, index) =>
-                    _buildFolderItem(widget.folders[index]),
+                itemCount: widget.folders.length + 1, // +1 for "不归类"
+                itemBuilder: (context, index) {
+                  if (index == widget.folders.length) {
+                    return _buildNoneOption();
+                  }
+                  return _buildFolderItem(widget.folders[index]);
+                },
               );
             }),
           ),
 
-          // 新建文件夹行
           _buildCreateRow(),
 
           // 确认按钮
@@ -140,7 +134,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
                   elevation: 0,
                 ),
                 child: Text(
-                  "确认归类 (${_selectedIds.length})",
+                  _selectedId != null ? "确认归类" : "移出所有文件夹",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.sp,
@@ -169,8 +163,48 @@ class _ClassifySheetState extends State<ClassifySheet> {
     );
   }
 
+  /// "不归类"选项（取消当前文件夹）
+  Widget _buildNoneOption() {
+    final isNone = _selectedId == null;
+    return ListTile(
+      leading: Container(
+        width: 40.r,
+        height: 40.r,
+        decoration: BoxDecoration(
+          color: isNone
+              ? const Color(0xFF009688).withOpacity(0.1)
+              : Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Icon(
+          Icons.folder_off_outlined,
+          color: isNone ? const Color(0xFF009688) : Colors.grey,
+          size: 22.r,
+        ),
+      ),
+      title: Text(
+        "不归类",
+        style: TextStyle(
+          fontWeight: isNone ? FontWeight.bold : FontWeight.normal,
+          color: isNone ? const Color(0xFF009688) : Colors.black87,
+        ),
+      ),
+      trailing: isNone
+          ? Container(
+              padding: EdgeInsets.all(4.r),
+              decoration: BoxDecoration(
+                color: const Color(0xFF009688),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.check, color: Colors.white, size: 16.r),
+            )
+          : const SizedBox.shrink(),
+      onTap: () => setState(() => _selectedId = null),
+    );
+  }
+
   Widget _buildFolderItem(FolderModel folder) {
-    final isSelected = _selectedIds.contains(folder.folderId);
+    final isSelected = _selectedId == folder.folderId;
     return ListTile(
       leading: Container(
         width: 40.r,
@@ -204,14 +238,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
               child: Icon(Icons.check, color: Colors.white, size: 16.r),
             )
           : Icon(Icons.add_circle_outline, color: Colors.grey.shade300, size: 22.r),
-      onTap: () {
-        // 新创建的文件夹自动选中
-        if (!_selectedIds.contains(folder.folderId)) {
-          setState(() => _selectedIds.add(folder.folderId));
-        } else {
-          setState(() => _selectedIds.remove(folder.folderId));
-        }
-      },
+      onTap: () => setState(() => _selectedId = folder.folderId),
     );
   }
 
@@ -266,24 +293,18 @@ class _ClassifySheetState extends State<ClassifySheet> {
       Get.snackbar("提示", "请输入文件夹名称");
       return;
     }
-    // 检查是否已存在同名文件夹
     final exists = widget.folders.any((f) => f.name == name);
     if (exists) {
       Get.snackbar("提示", "已存在同名文件夹");
       return;
     }
-    // 创建完毕后 RxList 自动触发 Obx 刷新
     await widget.onCreateFolder(name);
     _textController.clear();
     FocusScope.of(Get.context!).unfocus();
   }
 
   void _handleConfirm() {
-    if (_selectedIds.isEmpty) {
-      Get.snackbar("提示", "请选择至少一个文件夹");
-      return;
-    }
     Get.back();
-    widget.onConfirm(widget.journey.journeyId, List<String>.from(_selectedIds));
+    widget.onConfirm(widget.journey.journeyId, _selectedId);
   }
 }

@@ -56,7 +56,6 @@ class FolderService {
   }
 
   // 5. 获取文件夹详情及所属行程
-  /// 返回值包含文件夹基础信息和该文件夹下的行程列表 (list)
   Future<Map<String, dynamic>?> getFolderDetail(
     String folderId, {
     int page = 1,
@@ -67,14 +66,13 @@ class FolderService {
         '/journey/folder/$folderId',
         queryParameters: {'page': page.toString(), 'size': size.toString()},
       );
-      // 返回的数据结构比较复杂，包含 folderId, title, journeys 列表等
       return response.data['data'];
     } catch (e) {
       return null;
     }
   }
 
-  // 6. 将行程移入文件夹
+  // 6. 将行程移入文件夹（单分类，覆盖式）
   Future<bool> moveJourneyToFolder(String folderId, String journeyId) async {
     try {
       final response = await _apiClient.post(
@@ -94,31 +92,6 @@ class FolderService {
     try {
       final response = await _apiClient.delete(
         '/journey/folder/$folderId/move/$journeyId',
-      );
-      return response.data['code'] == 0;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  // 8. 将行程添加到文件夹（不覆盖已有文件夹，支持多分类）
-  Future<bool> addJourneyToFolder(String folderId, String journeyId) async {
-    try {
-      final response = await _apiClient.post(
-        '/journey/folder/$folderId/add/$journeyId',
-      );
-      return response.data['code'] == 0;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  // 9. 批量设置行程的文件夹（替换式-覆盖之前的关联）
-  Future<bool> setJourneyFolders(String journeyId, List<String> folderIds) async {
-    try {
-      final response = await _apiClient.put(
-        '/journey/folders/set',
-        data: {'journeyId': journeyId, 'folderIds': folderIds},
       );
       return response.data['code'] == 0;
     } catch (e) {

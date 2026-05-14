@@ -87,7 +87,6 @@ class MockData {
       "startTime": "2026-05-01 14:30:00",
       "endTime": "2026-05-01 17:45:00",
       "folderId": null,
-      "folderIds": [],
       "moments": ["moment_mock_001", "moment_mock_002"],
     },
     {
@@ -99,7 +98,6 @@ class MockData {
       "startTime": "2026-05-03 09:00:00",
       "endTime": "2026-05-03 12:20:00",
       "folderId": null,
-      "folderIds": [],
       "moments": ["moment_mock_003"],
     },
     {
@@ -111,7 +109,6 @@ class MockData {
       "startTime": "2026-05-05 10:00:00",
       "endTime": "2026-05-05 15:30:00",
       "folderId": "folder_mock_001",
-      "folderIds": ["folder_mock_001"],
       "moments": ["moment_mock_004", "moment_mock_005", "moment_mock_006"],
     },
     {
@@ -123,7 +120,6 @@ class MockData {
       "startTime": "2026-05-08 11:00:00",
       "endTime": "2026-05-08 20:00:00",
       "folderId": "folder_mock_001",
-      "folderIds": ["folder_mock_001"],
       "moments": [],
     },
     {
@@ -135,7 +131,6 @@ class MockData {
       "startTime": "2026-05-13 08:30:00",
       "endTime": null,
       "folderId": null,
-      "folderIds": [],
       "moments": ["moment_mock_007"],
     },
   ];
@@ -500,35 +495,6 @@ class MockData {
     return {"code": 0, "msg": "移出成功", "data": null};
   }
 
-  /// POST /journey/folder/:folderId/add/:journeyId - 添加行程到文件夹（不覆盖）
-  static Map<String, dynamic> addJourneyToFolder(String folderId, String journeyId) {
-    final jIdx = _journeyList.indexWhere((j) => j['journeyId'] == journeyId);
-    if (jIdx != -1) {
-      final ids = List<String>.from(_journeyList[jIdx]['folderIds'] ?? []);
-      if (!ids.contains(folderId)) {
-        ids.add(folderId);
-      }
-      _journeyList[jIdx]['folderIds'] = ids;
-      // 同步更新 folderId 为第一个
-      _journeyList[jIdx]['folderId'] = ids.isNotEmpty ? ids.first : null;
-    }
-    return {"code": 0, "msg": "添加成功", "data": null};
-  }
-
-  /// PUT /journey/folders/set - 批量设置文件夹（覆盖式）
-  static Map<String, dynamic> setJourneyFolders(Map<String, dynamic> body) {
-    final journeyId = body['journeyId'] as String?;
-    final folderIds = (body['folderIds'] as List<dynamic>?)?.cast<String>() ?? [];
-    if (journeyId == null) {
-      return {"code": 1001, "msg": "参数错误", "data": null};
-    }
-    final jIdx = _journeyList.indexWhere((j) => j['journeyId'] == journeyId);
-    if (jIdx != -1) {
-      _journeyList[jIdx]['folderIds'] = folderIds;
-      _journeyList[jIdx]['folderId'] = folderIds.isNotEmpty ? folderIds.first : null;
-    }
-    return {"code": 0, "msg": "更新成功", "data": null};
-  }
 
   /// ==================== 环境上下文 ====================
 
@@ -681,21 +647,6 @@ class MockData {
     }
     if (path == '/journey/folder' && method == 'POST') {
       return createFolder(body ?? {});
-    }
-
-    // POST /journey/folder/:folderId/add/:journeyId
-    if (path.startsWith('/journey/folder/') && path.contains('/add/') && method == 'POST') {
-      final parts = path.split('/');
-      if (parts.length >= 6) {
-        final folderId = parts[3];
-        final journeyId = parts[5];
-        return addJourneyToFolder(folderId, journeyId);
-      }
-    }
-
-    // PUT /journey/folders/set
-    if (path == '/journey/folders/set' && method == 'PUT') {
-      return setJourneyFolders(body ?? {});
     }
 
     if (path.startsWith('/journey/folder/') && path.contains('/move/') && method == 'POST') {
