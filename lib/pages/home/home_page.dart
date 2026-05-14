@@ -228,6 +228,8 @@ class HomePage extends StatelessWidget {
               Get.toNamed('/about');
             } else if (value == 'settings') {
               Get.toNamed('/setting');
+            } else if (value == 'help') {
+              Get.toNamed('/help');
             } else {
               Fluttertoast.showToast(msg: "点击了 $value");
             }
