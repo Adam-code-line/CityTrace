@@ -2,7 +2,7 @@
   <img src="assets/images/citytrace_app_icon.jpg" alt="CityTrace Logo" width="200">
 </p>
 
-<h1 align="center">CityTrace（城市足迹）</h1>
+<h1 align="center">CityTrace（城市寻迹）</h1>
 
 一款基于 **Flutter** 开发的移动端城市足迹记录应用，帮助你记录在城市中漫游的每一段旅程与精彩瞬间。
 
