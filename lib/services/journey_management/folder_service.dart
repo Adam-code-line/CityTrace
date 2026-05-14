@@ -100,4 +100,29 @@ class FolderService {
       return false;
     }
   }
+
+  // 8. 将行程添加到文件夹（不覆盖已有文件夹，支持多分类）
+  Future<bool> addJourneyToFolder(String folderId, String journeyId) async {
+    try {
+      final response = await _apiClient.post(
+        '/journey/folder/$folderId/add/$journeyId',
+      );
+      return response.data['code'] == 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // 9. 批量设置行程的文件夹（替换式-覆盖之前的关联）
+  Future<bool> setJourneyFolders(String journeyId, List<String> folderIds) async {
+    try {
+      final response = await _apiClient.put(
+        '/journey/folders/set',
+        data: {'journeyId': journeyId, 'folderIds': folderIds},
+      );
+      return response.data['code'] == 0;
+    } catch (e) {
+      return false;
+    }
+  }
 }

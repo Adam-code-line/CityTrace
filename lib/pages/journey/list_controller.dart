@@ -46,7 +46,7 @@ class ListController extends GetxController {
 
     final list = await _journeyService.getJourneyList(
       page: 1,
-      size: 20,
+      size: 100,
       folderId: filterId,
     );
     final completedList = list.where((e) => e.status != "ongoing").toList();
@@ -87,9 +87,8 @@ class ListController extends GetxController {
     }
   }
 
-  /// 移动行程到指定文件夹
+  /// 移动行程到指定文件夹（替换式——移出原有文件夹，移入新的）
   Future<void> moveJourney(String journeyId, String targetFolderId) async {
-    // 调用 folderService 中已有的 moveJourneyToFolder
     final success = await _folderService.moveJourneyToFolder(
       targetFolderId,
       journeyId,
@@ -97,10 +96,64 @@ class ListController extends GetxController {
 
     if (success) {
       Get.snackbar("成功", "行程已移动");
-      // 移动后，为了保证当前文件夹显示的列表准确，重新获取一次列表
       _fetchJourneys();
     } else {
       Get.snackbar("错误", "移动失败，请重试");
+    }
+  }
+
+  /// 将行程添加到指定文件夹（不覆盖已有分类，支持多分类）
+  Future<void> addJourneyToFolder(String journeyId, String folderId) async {
+    final success = await _folderService.addJourneyToFolder(
+      folderId,
+      journeyId,
+    );
+
+    if (success) {
+      Get.snackbar("成功", "已归类到文件夹");
+      _fetchJourneys();
+    } else {
+      Get.snackbar("错误", "归类失败，请重试");
+    }
+  }
+
+  /// 批量设置行程所属文件夹（覆盖式）
+  Future<void> setJourneyFolders(
+    String journeyId,
+    List<String> folderIds,
+  ) async {
+    final success =
+        await _folderService.setJourneyFolders(journeyId, folderIds);
+
+    if (success) {
+      Get.snackbar("成功", "文件夹已更新");
+      _fetchJourneys();
+    } else {
+      Get.snackbar("错误", "更新失败，请重试");
+    }
+  }
+
+  /// 将行程从指定文件夹中移出
+  Future<void> removeJourneyFromFolder(
+    String journeyId,
+    String folderId,
+  ) async {
+    final success = await _folderService.removeJourneyFromFolder(
+      folderId,
+      journeyId,
+    );
+
+    if (success) {
+      Get.snackbar("提示", "已从文件夹移出");
+      // 如果当前是在该文件夹下查看，刷新列表
+      if (selectedFolderId.value == folderId) {
+        _fetchJourneys();
+      } else {
+        // 否则只更新本地数据
+        _fetchJourneys();
+      }
+    } else {
+      Get.snackbar("错误", "移出失败，请重试");
     }
   }
 

@@ -7,18 +7,21 @@ part of 'journey_model.dart';
 // **************************************************************************
 
 JourneyModel _$JourneyModelFromJson(Map<String, dynamic> json) => JourneyModel(
-  journeyId: json['journeyId'] as String,
-  title: json['title'] as String,
-  description: json['description'] as String?,
-  cover: json['cover'] as String,
-  status: json['status'] as String,
-  startTime: json['startTime'] as String,
-  endTime: json['endTime'] as String?,
-  folderId: json['folderId'] as String?,
-  moments: (json['moments'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-);
+      journeyId: json['journeyId'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      cover: json['cover'] as String,
+      status: json['status'] as String,
+      startTime: json['startTime'] as String,
+      endTime: json['endTime'] as String?,
+      folderId: json['folderId'] as String?,
+      folderIds: (json['folderIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      moments: (json['moments'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    );
 
 Map<String, dynamic> _$JourneyModelToJson(JourneyModel instance) =>
     <String, dynamic>{
@@ -30,5 +33,6 @@ Map<String, dynamic> _$JourneyModelToJson(JourneyModel instance) =>
       'startTime': instance.startTime,
       'endTime': instance.endTime,
       'folderId': instance.folderId,
+      'folderIds': instance.folderIds,
       'moments': instance.moments,
     };
