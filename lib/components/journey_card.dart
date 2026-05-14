@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../models/journey_model.dart';
 import '../models/folder_model.dart';
 
-/// 可右滑归类的行程卡片（视差效果：封面图=背景层，遮罩+日期=前景层，不同速度移动）
+/// 可右滑归类的行程卡片（视差效果：封面图=背景层，遮罩+日期=前景层）
 class SwipeableJourneyCard extends StatefulWidget {
   final JourneyModel journey;
   final List<FolderModel> folders;
@@ -38,12 +38,12 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
     final journey = widget.journey;
     final hasFolder = journey.folderId != null;
 
-    // 卡片自身的偏移 = 完整拖拽距离
-    final cardOffset = _dragX;
-
-    // 视差偏移系数
+    // 视差偏移
     final bgOffset = -_dragX * 0.5;
     final fgOffset = _dragX * 0.9;
+
+    // 提示进度
+    final hintProgress = (_dragX / _maxDragWidth).clamp(0.0, 1.0);
 
     return GestureDetector(
       onHorizontalDragUpdate: (details) {
@@ -57,41 +57,81 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
         }
         setState(() => _dragX = 0);
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 30),
-        transform: Matrix4.translationValues(cardOffset, 0, 0),
+      child: Container(
+        // 固定高度 = 160(封面) + padding*2 + title + folderTag + 底部提示 ≈ 320
+        height: 320.h,
         margin: EdgeInsets.only(bottom: 20.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10.r,
-              offset: Offset(0, 4.h),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
+        child: Stack(
+          clipBehavior: Clip.none,
           children: [
-            _buildParallaxCover(journey, bgOffset, fgOffset),
-            _buildInfoSection(journey, hasFolder),
-            // 底部：右滑提示
-            Container(
-              padding: EdgeInsets.only(bottom: 8.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.swipe, size: 14.r, color: Colors.grey.shade300),
-                  SizedBox(width: 4.w),
-                  Text(
-                    hasFolder ? "右滑重新归类" : "右滑归类到文件夹",
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      color: Colors.grey.shade300,
+            // 背景层：卡片左侧的归类提示（在卡片外部，随卡片右滑而露出）
+            if (hintProgress > 0)
+              Positioned(
+                left: -50.w + _dragX * 0.3, // 跟随卡片缓慢移动
+                top: 0,
+                bottom: 80,
+                child: Opacity(
+                  opacity: hintProgress,
+                  child: Container(
+                    width: 80.w,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.only(right: 12.w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          hasFolder
+                              ? Icons.replay_outlined
+                              : Icons.folder_outlined,
+                          size: 24.r,
+                          color: Color.lerp(
+                            Colors.grey.shade400,
+                            Colors.black87,
+                            hintProgress,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          hasFolder ? "重新归类" : "归类",
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Color.lerp(
+                              Colors.grey.shade400,
+                              Colors.black87,
+                              hintProgress,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                ),
+              ),
+
+            // 前景层：可滑动的卡片
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 30),
+              transform: Matrix4.translationValues(_dragX, 0, 0),
+              width: 411.4.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10.r,
+                    offset: Offset(0, 4.h),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildParallaxCover(journey, bgOffset, fgOffset),
+                  _buildInfoSection(journey, hasFolder),
+                  _buildSwipeHint(hasFolder),
                 ],
               ),
             ),
@@ -161,7 +201,6 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
   }
 
   Widget _buildInfoSection(JourneyModel journey, bool hasFolder) {
-    // 查找当前所属的文件夹名称
     String? folderName;
     if (hasFolder && journey.folderId != null) {
       final folder = widget.folders.firstWhereOrNull(
@@ -176,43 +215,61 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(
                   journey.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Icon(Icons.chevron_right, color: Colors.grey),
+              SizedBox(width: 4.w),
+              const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
             ],
           ),
           SizedBox(height: 4.h),
           if (folderName != null)
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 2.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF009688).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Text(
-                    folderName,
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      color: const Color(0xFF009688),
-                    ),
-                  ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 8.w,
+                vertical: 2.h,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFF009688).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                folderName,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: const Color(0xFF009688),
                 ),
-              ],
+              ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSwipeHint(bool hasFolder) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.swipe, size: 14.r, color: Colors.grey.shade300),
+          SizedBox(width: 4.w),
+          Text(
+            hasFolder ? "右滑重新归类" : "右滑归类到文件夹",
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: Colors.grey.shade300,
+            ),
+          ),
         ],
       ),
     );
