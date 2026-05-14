@@ -146,7 +146,7 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Colors.black.withOpacity(0.3),
+                      Colors.black.withOpacity(0),
                       Colors.transparent,
                     ],
                   ),
