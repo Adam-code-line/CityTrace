@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import '../models/journey_model.dart';
 import '../models/folder_model.dart';
 
-/// 可右滑归类的行程卡片组件
-class SwipeableJourneyCard extends StatelessWidget {
+/// 可右滑归类的行程卡片（带动画：操作区随卡片右滑拉伸，颜色渐变为渐变效果）
+class SwipeableJourneyCard extends StatefulWidget {
   final JourneyModel journey;
   final List<FolderModel> folders;
   final VoidCallback onTap;
@@ -23,71 +23,126 @@ class SwipeableJourneyCard extends StatelessWidget {
   });
 
   @override
+  State<SwipeableJourneyCard> createState() => _SwipeableJourneyCardState();
+}
+
+class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
+    with SingleTickerProviderStateMixin {
+  /// 拖拽偏移量（0 = 未拖动，maxDrag = 完全展开）
+  double _dragX = 0;
+
+  /// 最大拖拽宽度（操作区完全展开的宽度）
+  static const double _maxDragWidth = 160;
+
+  /// 触发归类的阈值
+  static const double _triggerThreshold = 100;
+
+  @override
   Widget build(BuildContext context) {
+    final currentFolderIds = widget.journey.getAllFolderIds();
+
+    // 根据拖拽距离计算操作区的展开比例 (0.0 ~ 1.0)
+    final progress = (_dragX / _maxDragWidth).clamp(0.0, 1.0);
+
+    // 计算渐变色：从 teal(1.0) 到 半透明白(0.0)
+    final actionOpacity = 0.3 + 0.7 * (1.0 - progress); // 越往右拖颜色越淡
+    final gradientColors = [
+      Color.lerp(
+        const Color(0xFF009688).withOpacity(0.15),
+        const Color(0xFF009688),
+        progress,
+      )!,
+      const Color(0xFF009688).withOpacity(actionOpacity),
+    ];
+
     return GestureDetector(
-      onTap: onTap,
-      onLongPress: onLongPress,
+      onTap: widget.onTap,
+      onLongPress: widget.onLongPress,
       child: Stack(
         children: [
-          // 右滑时露出的底层操作区
-          _buildSlideAction(journey),
-          // 上层卡片（通过 Dismissible 实现右滑效果）
-          Dismissible(
-            key: ValueKey('swipe_${journey.journeyId}'),
-            direction: DismissDirection.startToEnd,
-            confirmDismiss: (direction) async {
-              onSwipeClassify();
-              return false; // 不移除卡片
+          // 底层：操作区（宽度随 _dragX 拉伸）
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 50),
+              width: _dragX.clamp(0, _maxDragWidth),
+              margin: EdgeInsets.only(bottom: 20.h),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.r),
+                  bottomLeft: Radius.circular(20.r),
+                  topRight: Radius.circular(12.r),
+                  bottomRight: Radius.circular(12.r),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: gradientColors,
+                ),
+              ),
+              child: _dragX > 40
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          currentFolderIds.isNotEmpty
+                              ? Icons.replay_outlined
+                              : Icons.folder_outlined,
+                          color: Colors.white.withOpacity(
+                            0.3 + 0.7 * (1.0 - progress),
+                          ),
+                          size: 24.r,
+                        ),
+                        if (_dragX > 80) ...[
+                          SizedBox(width: 8.w),
+                          Flexible(
+                            child: Text(
+                              currentFolderIds.isNotEmpty ? "重新归类" : "归类",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(
+                                  0.3 + 0.7 * (1.0 - progress),
+                                ),
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ),
+
+          // 上层：可拖拽的卡片
+          GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              setState(() {
+                _dragX = (_dragX + details.delta.dx).clamp(0, _maxDragWidth);
+              });
             },
-            background: const SizedBox.shrink(),
-            child: _JourneyCardContent(
-              journey: journey,
-              folders: folders,
+            onHorizontalDragEnd: (details) {
+              if (_dragX >= _triggerThreshold) {
+                // 触发归类
+                widget.onSwipeClassify();
+              }
+              // 回弹动画
+              setState(() => _dragX = 0);
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 50),
+              transform: Matrix4.translationValues(_dragX, 0, 0),
+              child: _JourneyCardContent(
+                journey: widget.journey,
+                folders: widget.folders,
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// 右滑时露出的操作提示区
-  Widget _buildSlideAction(JourneyModel journey) {
-    final currentFolderIds = journey.getAllFolderIds();
-    return Positioned(
-      left: 0,
-      top: 0,
-      bottom: 0,
-      child: Container(
-        width: 160.w,
-        margin: EdgeInsets.only(bottom: 20.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFF009688),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.r),
-            bottomLeft: Radius.circular(20.r),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              currentFolderIds.isNotEmpty
-                  ? Icons.replay_outlined
-                  : Icons.folder_outlined,
-              color: Colors.white,
-              size: 24.r,
-            ),
-            SizedBox(width: 8.w),
-            Text(
-              currentFolderIds.isNotEmpty ? "重新归类" : "归类",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

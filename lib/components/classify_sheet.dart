@@ -5,13 +5,15 @@ import 'package:get/get.dart';
 import '../models/journey_model.dart';
 import '../models/folder_model.dart';
 
-/// 行程归类 BottomSheet
-/// 支持多选文件夹 + 新建文件夹 + 确认归类
+/// 行程归类 BottomSheet — 文件夹通过 getX 响应式自动刷新
+/// so that newly created folders show up immediately
 class ClassifySheet extends StatefulWidget {
   final JourneyModel journey;
-  final List<FolderModel> folders;
+  final RxList<FolderModel> folders;
   final Future<void> Function(String name) onCreateFolder;
-  final Future<void> Function(String journeyId, List<String> folderIds) onConfirm;
+  final Future<void> Function(String journeyId, List<String> folderIds)
+      onConfirm;
+  final VoidCallback? onFoldersChanged; // called after create/refresh
 
   const ClassifySheet({
     super.key,
@@ -19,14 +21,17 @@ class ClassifySheet extends StatefulWidget {
     required this.folders,
     required this.onCreateFolder,
     required this.onConfirm,
+    this.onFoldersChanged,
   });
 
-  /// 弹出归类面板
+  /// 弹出归类面板 — folders 为 RxList，创建后自动刷新
   static Future<void> show({
     required JourneyModel journey,
-    required List<FolderModel> folders,
+    required RxList<FolderModel> folders,
     required Future<void> Function(String name) onCreateFolder,
-    required Future<void> Function(String journeyId, List<String> folderIds) onConfirm,
+    required Future<void> Function(String journeyId, List<String> folderIds)
+        onConfirm,
+    VoidCallback? onFoldersChanged,
   }) {
     return Get.bottomSheet(
       ClassifySheet(
@@ -34,7 +39,9 @@ class ClassifySheet extends StatefulWidget {
         folders: folders,
         onCreateFolder: onCreateFolder,
         onConfirm: onConfirm,
+        onFoldersChanged: onFoldersChanged,
       ),
+      isScrollControlled: true,
     );
   }
 
@@ -83,7 +90,6 @@ class _ClassifySheetState extends State<ClassifySheet> {
                     ),
                   ),
                 ),
-                // 关闭按钮
                 GestureDetector(
                   onTap: () => Get.back(),
                   child: Container(
@@ -100,16 +106,19 @@ class _ClassifySheetState extends State<ClassifySheet> {
           ),
           Divider(height: 1.h),
 
-          // 文件夹列表
+          // 文件夹列表 — 使用 Obx 监听 RxList 变化
           Expanded(
-            child: widget.folders.isEmpty
-                ? _buildEmptyFolders()
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    itemCount: widget.folders.length,
-                    itemBuilder: (context, index) =>
-                        _buildFolderItem(widget.folders[index]),
-                  ),
+            child: Obx(() {
+              if (widget.folders.isEmpty) {
+                return _buildEmptyFolders();
+              }
+              return ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                itemCount: widget.folders.length,
+                itemBuilder: (context, index) =>
+                    _buildFolderItem(widget.folders[index]),
+              );
+            }),
           ),
 
           // 新建文件夹行
@@ -152,16 +161,9 @@ class _ClassifySheetState extends State<ClassifySheet> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.folder_open_outlined,
-            size: 60.r,
-            color: Colors.grey.shade200,
-          ),
+          Icon(Icons.folder_open_outlined, size: 60.r, color: Colors.grey.shade200),
           SizedBox(height: 16.h),
-          const Text(
-            "暂无文件夹，请在下方新建",
-            style: TextStyle(color: Colors.grey),
-          ),
+          const Text("暂无文件夹，请在下方新建", style: TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -180,9 +182,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Icon(
-          isSelected
-              ? Icons.folder_special_outlined
-              : Icons.folder_outlined,
+          isSelected ? Icons.folder_special_outlined : Icons.folder_outlined,
           color: isSelected ? const Color(0xFF009688) : Colors.grey,
           size: 22.r,
         ),
@@ -201,25 +201,16 @@ class _ClassifySheetState extends State<ClassifySheet> {
                 color: const Color(0xFF009688),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 16.r,
-              ),
+              child: Icon(Icons.check, color: Colors.white, size: 16.r),
             )
-          : Icon(
-              Icons.add_circle_outline,
-              color: Colors.grey.shade300,
-              size: 22.r,
-            ),
+          : Icon(Icons.add_circle_outline, color: Colors.grey.shade300, size: 22.r),
       onTap: () {
-        setState(() {
-          if (isSelected) {
-            _selectedIds.remove(folder.folderId);
-          } else {
-            _selectedIds.add(folder.folderId);
-          }
-        });
+        // 新创建的文件夹自动选中
+        if (!_selectedIds.contains(folder.folderId)) {
+          setState(() => _selectedIds.add(folder.folderId));
+        } else {
+          setState(() => _selectedIds.remove(folder.folderId));
+        }
       },
     );
   }
@@ -261,11 +252,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
                 color: const Color(0xFF009688),
                 borderRadius: BorderRadius.circular(16.r),
               ),
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 22.r,
-              ),
+              child: Icon(Icons.add, color: Colors.white, size: 22.r),
             ),
           ),
         ],
@@ -273,7 +260,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
     );
   }
 
-  void _handleCreateFolder() {
+  void _handleCreateFolder() async {
     final name = _textController.text.trim();
     if (name.isEmpty) {
       Get.snackbar("提示", "请输入文件夹名称");
@@ -285,7 +272,8 @@ class _ClassifySheetState extends State<ClassifySheet> {
       Get.snackbar("提示", "已存在同名文件夹");
       return;
     }
-    widget.onCreateFolder(name);
+    // 创建完毕后 RxList 自动触发 Obx 刷新
+    await widget.onCreateFolder(name);
     _textController.clear();
     FocusScope.of(Get.context!).unfocus();
   }
