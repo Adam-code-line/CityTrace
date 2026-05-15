@@ -1,9 +1,11 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../components/map_view.dart';
+import '../../components/ui/info_pill.dart';
 import 'home_controller.dart';
 
 class HomePage extends StatelessWidget {
@@ -270,18 +272,14 @@ class HomePage extends StatelessWidget {
     return Obx(
       () => Row(
         children: [
-          Icon(Icons.location_on_outlined, size: 18.r, color: Colors.grey),
-          SizedBox(width: 4.w),
-          Text(
-            controller.locationDisplay.value,
-            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+          InfoPill(
+            icon: Icons.location_on_outlined,
+            text: controller.locationDisplay.value,
           ),
-          SizedBox(width: 16.w),
-          Icon(Icons.wb_cloudy_outlined, size: 18.r, color: Colors.grey),
-          SizedBox(width: 4.w),
-          Text(
-            controller.weatherDisplay.value,
-            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+          SizedBox(width: 10.w),
+          InfoPill(
+            icon: Icons.wb_cloudy_outlined,
+            text: controller.weatherDisplay.value,
           ),
         ],
       ),
@@ -552,28 +550,46 @@ class HomePage extends StatelessWidget {
         );
       }
 
-      return SizedBox(
-        width: 100.w,
-        height: 100.w,
-        child: FloatingActionButton(
-          heroTag: "journey_fab",
-          onPressed: () {
-            if (controller.isLoggedIn) {
-              controller.startMapLoadingTimer();
-              Get.bottomSheet(
-                _buildConfirmBottomSheet(),
-                isScrollControlled: true,
-              );
-            } else {
-              controller.handleUnlogFabClick();
-            }
-          },
-          backgroundColor: const Color(0xFF009688),
-          shape: const CircleBorder(),
-          child: Icon(
-            Icons.play_arrow_rounded,
-            color: Colors.white,
-            size: 48.r,
+      return Padding(
+        padding: EdgeInsets.only(bottom: 40.h),
+        child: SizedBox(
+          width: 160.w,
+          height: 48.h,
+          child: ElevatedButton(
+            onPressed: () {
+              if (controller.isLoggedIn) {
+                controller.startMapLoadingTimer();
+                Get.bottomSheet(
+                  _buildConfirmBottomSheet(),
+                  isScrollControlled: true,
+                );
+              } else {
+                controller.handleUnlogFabClick();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF009688),
+              foregroundColor: Colors.white,
+              elevation: 6,
+              shadowColor: const Color(0xFF009688).withOpacity(0.4),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24.r),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.play_arrow_rounded, size: 28.r),
+                SizedBox(width: 6.w),
+                Text(
+                  "开始行程",
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
