@@ -195,6 +195,104 @@ class AppInputDialog extends StatelessWidget {
   }
 }
 
+/// 选项模型
+class AppSheetAction {
+  final IconData icon;
+  final String label;
+  final Color? color;
+  final VoidCallback onTap;
+
+  const AppSheetAction({
+    required this.icon,
+    required this.label,
+    this.color,
+    required this.onTap,
+  });
+}
+
+/// 应用级操作菜单 BottomSheet
+class AppActionSheet extends StatelessWidget {
+  final String title;
+  final List<AppSheetAction> actions;
+
+  const AppActionSheet({
+    super.key,
+    required this.title,
+    required this.actions,
+  });
+
+  /// 快捷弹出操作菜单
+  static Future<void> show({
+    required String title,
+    required List<AppSheetAction> actions,
+  }) {
+    return Get.bottomSheet(
+      AppActionSheet(title: title, actions: actions),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 拖拽指示条
+          Container(
+            margin: EdgeInsets.only(top: 12.h, bottom: 8.h),
+            width: 40.w,
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(2.r),
+            ),
+          ),
+          // 标题
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          Divider(height: 1.h, color: Colors.grey.shade200),
+          ...actions.map((action) => _buildActionItem(action)),
+          SizedBox(height: 12.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionItem(AppSheetAction action) {
+    return ListTile(
+      leading: Icon(
+        action.icon,
+        color: action.color ?? Colors.black87,
+        size: 22.r,
+      ),
+      title: Text(
+        action.label,
+        style: TextStyle(
+          fontSize: 15.sp,
+          color: action.color ?? Colors.black87,
+        ),
+      ),
+      onTap: () {
+        Get.back();
+        action.onTap();
+      },
+    );
+  }
+}
+
 /// 确认对话框
 class AppConfirmDialog extends StatelessWidget {
   final String title;

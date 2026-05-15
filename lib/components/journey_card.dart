@@ -47,6 +47,8 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
     final hintProgress = (_dragX / _maxDragWidth).clamp(0.0, 1.0);
 
     return GestureDetector(
+      onTap: widget.onTap,
+      onLongPress: widget.onLongPress,
       onHorizontalDragUpdate: (details) {
         setState(() {
           _dragX = (_dragX + details.delta.dx).clamp(0, _maxDragWidth);
@@ -58,86 +60,81 @@ class _SwipeableJourneyCardState extends State<SwipeableJourneyCard>
         }
         setState(() => _dragX = 0);
       },
-      child: Container(
-        // 固定高度 = 160(封面) + padding*2 + title + folderTag + 底部提示 ≈ 320
-        height: 320.h,
-        margin: EdgeInsets.only(bottom: 20.h),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            // 背景层：卡片左侧的归类提示（在卡片外部，随卡片右滑而露出）
-            if (hintProgress > 0)
-              Positioned(
-                left: -50.w + _dragX * 0.3, // 跟随卡片缓慢移动
-                top: 0,
-                bottom: 80,
-                child: Opacity(
-                  opacity: hintProgress,
-                  child: Container(
-                    width: 80.w,
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: 12.w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          hasFolder
-                              ? Icons.replay_outlined
-                              : Icons.folder_outlined,
-                          size: 24.r,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // 背景层：卡片左侧的归类提示（在卡片外部，随卡片右滑而露出）
+          if (hintProgress > 0)
+            Positioned(
+              left: -50.w + _dragX * 0.3,
+              top: 0,
+              bottom: 30.h,
+              child: Opacity(
+                opacity: hintProgress,
+                child: Container(
+                  width: 80.w,
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(right: 12.w),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        hasFolder
+                            ? Icons.replay_outlined
+                            : Icons.folder_outlined,
+                        size: 24.r,
+                        color: Color.lerp(
+                          Colors.grey.shade400,
+                          Colors.black87,
+                          hintProgress,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        hasFolder ? "重新归类" : "归类",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
                           color: Color.lerp(
                             Colors.grey.shade400,
                             Colors.black87,
                             hintProgress,
                           ),
                         ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          hasFolder ? "重新归类" : "归类",
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Color.lerp(
-                              Colors.grey.shade400,
-                              Colors.black87,
-                              hintProgress,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-
-            // 前景层：可滑动的卡片
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 30),
-              transform: Matrix4.translationValues(_dragX, 0, 0),
-              width: 411.4.w,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10.r,
-                    offset: Offset(0, 4.h),
-                  ),
-                ],
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildParallaxCover(journey, bgOffset, fgOffset),
-                  _buildInfoSection(journey, hasFolder),
-                  _buildSwipeHint(hasFolder),
-                ],
-              ),
             ),
-          ],
-        ),
+
+          // 前景层：可滑动的卡片
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 30),
+            transform: Matrix4.translationValues(_dragX, 0, 0),
+            width: 411.4.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildParallaxCover(journey, bgOffset, fgOffset),
+                _buildInfoSection(journey, hasFolder),
+                _buildSwipeHint(hasFolder),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

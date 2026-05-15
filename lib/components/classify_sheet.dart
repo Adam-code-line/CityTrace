@@ -61,7 +61,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxHeight: Get.height * 0.75),
+      constraints: BoxConstraints(maxHeight: Get.height * 0.5),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
