@@ -17,7 +17,7 @@ class ListPage extends GetView<ListController> {
     Get.put(ListController());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.pageBackground,
       appBar: AppBar(
         title: Text(
           "我的行程",

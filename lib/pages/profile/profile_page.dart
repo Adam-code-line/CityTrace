@@ -13,7 +13,7 @@ class ProfilePage extends StatelessWidget {
     final controller = Get.put(ProfileController());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.pageBackground,
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(child: _buildHeaderWithAvatarSection()),

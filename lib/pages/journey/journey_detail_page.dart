@@ -24,7 +24,7 @@ class JourneyDetailPage extends StatelessWidget {
     final controller = Get.put(JourneyDetailController());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.pageBackground,
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

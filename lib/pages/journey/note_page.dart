@@ -13,7 +13,7 @@ class NotePage extends StatelessWidget {
     final controller = Get.put(NoteController());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.pageBackground,
       appBar: AppBar(
         title: Text(
           "AI 寻迹成书",

@@ -62,4 +62,8 @@ class AppColors {
   static const Color greyShade50 = Color(0xFFF5F5F5);
   static const Color greyShade100 = Color(0xFFE0E0E0);
   static const Color greyShade300 = Color(0xFFBDBDBD);
+
+  // ============ 页面背景色 ============
+  /// 全局页面背景色 - 极浅灰色
+  static const Color pageBackground = Color(0xFFF9FAFB);
 }

@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       key: controller.scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.pageBackground,
       drawer: _buildLeftDrawer(), // 侧拉菜单
       body: SafeArea(
         child: SingleChildScrollView(
