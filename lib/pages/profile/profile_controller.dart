@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -142,7 +143,7 @@ class ProfileController extends GetxController {
                   icon: const Icon(Icons.camera_alt),
                   label: const Text("拍照"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF009688),
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 48),
                   ),
@@ -161,7 +162,7 @@ class ProfileController extends GetxController {
                   icon: const Icon(Icons.photo_library),
                   label: const Text("从相册选择"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF009688),
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 48),
                   ),

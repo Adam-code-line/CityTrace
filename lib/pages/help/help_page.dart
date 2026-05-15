@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class HelpPage extends StatelessWidget {
             child: Icon(
               Icons.arrow_back_ios_new_rounded,
               size: 20.r,
-              color: const Color(0xFF00695C),
+              color: AppColors.primaryDark,
             ),
           ),
         ),
@@ -105,10 +106,10 @@ class HelpPage extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF009688).withOpacity(0.05),
+              color: AppColors.primaryOpacity005,
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(
-                color: const Color(0xFF009688).withOpacity(0.15),
+                color: AppColors.primaryOpacity015,
               ),
             ),
             child: Column(
@@ -118,7 +119,7 @@ class HelpPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF009688),
+                    color: AppColors.primary,
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -174,7 +175,7 @@ class HelpPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF009688),
+                  color: AppColors.primary,
                 ),
               ),
               Expanded(
@@ -234,10 +235,10 @@ class HelpPage extends StatelessWidget {
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: const Color(0xFF009688).withOpacity(0.1),
+                color: AppColors.primaryOpacity010,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(icon, color: const Color(0xFF009688), size: 22.r),
+              child: Icon(icon, color: AppColors.primary, size: 22.r),
             ),
             SizedBox(width: 16.w),
             Expanded(

@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -76,8 +77,8 @@ class NotePage extends StatelessWidget {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.r),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF009688),
+                              borderSide: BorderSide(
+                                color: AppColors.primary,
                               ),
                             ),
                           ),
@@ -99,7 +100,7 @@ class NotePage extends StatelessWidget {
                       ? null
                       : () => controller.startGenerating(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF009688),
+                    backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.r),
                     ),
@@ -156,12 +157,12 @@ class NotePage extends StatelessWidget {
               padding: EdgeInsets.all(12.r),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFF009688).withOpacity(0.1)
+                    ? AppColors.primaryOpacity010
                     : Colors.grey.shade50,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
                   color: isSelected
-                      ? const Color(0xFF009688)
+                      ? AppColors.primary
                       : Colors.transparent,
                   width: 2.w,
                 ),
@@ -175,7 +176,7 @@ class NotePage extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: isSelected
-                          ? const Color(0xFF009688)
+                          ? AppColors.primary
                           : Colors.black87,
                     ),
                   ),
@@ -200,7 +201,7 @@ class NotePage extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.auto_awesome, color: Color(0xFF009688), size: 20.r),
+            Icon(Icons.auto_awesome, color: AppColors.primary, size: 20.r),
             SizedBox(width: 8.w),
             Text(
               "生成结果",
@@ -221,7 +222,6 @@ class NotePage extends StatelessWidget {
             () => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 标题部分
                 controller.isEditing.value
                     ? TextField(
                         controller: controller.titleEditController,
@@ -243,7 +243,6 @@ class NotePage extends StatelessWidget {
                         ),
                       ),
                 Divider(height: 32.h),
-                // 正文部分
                 controller.isEditing.value
                     ? TextField(
                         controller: controller.bodyEditController,
@@ -259,14 +258,13 @@ class NotePage extends StatelessWidget {
                         style: TextStyle(fontSize: 15.sp, height: 1.6),
                       ),
                 SizedBox(height: 20.h),
-                // 标签部分
                 Wrap(
                   spacing: 8.w,
                   children: controller.hashtags
                       .map(
                         (t) => Text(
                           "#$t",
-                          style: const TextStyle(color: Color(0xFF009688)),
+                          style: TextStyle(color: AppColors.primary),
                         ),
                       )
                       .toList(),
@@ -290,7 +288,7 @@ class NotePage extends StatelessWidget {
                   },
                   child: Text(
                     controller.isEditing.value ? "保存修改" : "手动修改",
-                    style: TextStyle(color: const Color(0xFF009688)),
+                    style: TextStyle(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -299,7 +297,7 @@ class NotePage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => controller.shareToClipboard(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF009688),
+                    backgroundColor: AppColors.primary,
                   ),
                   child: const Text(
                     "分享足迹",

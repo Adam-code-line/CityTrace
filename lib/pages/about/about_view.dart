@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:citytrace/core/utils/metadata_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,7 +44,7 @@ class AboutView extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) {
                   return Icon(
                     Icons.map_rounded,
-                    color: Color(0xFF009688),
+                    color: AppColors.primary,
                     size: 100.r,
                   );
                 },
@@ -96,7 +97,7 @@ class AboutView extends StatelessWidget {
       style: TextStyle(
         fontSize: 18.sp,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF009688), // 使用 CityTrace 主题色
+        color: AppColors.primary,
         letterSpacing: 1.2,
         height: 1.5,
       ),

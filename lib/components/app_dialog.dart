@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -69,12 +70,12 @@ class AppInputDialog extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(8.r),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF009688).withOpacity(0.1),
+                      color: AppColors.primaryOpacity010,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(
                       icon,
-                      color: const Color(0xFF009688),
+                      color: AppColors.primary,
                       size: 24.r,
                     ),
                   ),
@@ -120,7 +121,7 @@ class AppInputDialog extends StatelessWidget {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.r),
                   borderSide: BorderSide(
-                    color: const Color(0xFF009688),
+                    color: AppColors.primary,
                     width: 1.5,
                   ),
                 ),
@@ -151,8 +152,8 @@ class AppInputDialog extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => _handleSubmit(textController.text.trim(), context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF009688),
-                    foregroundColor: Colors.white,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.r),
                     ),

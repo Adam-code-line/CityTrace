@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,7 @@ class SettingPage extends StatelessWidget {
             child: Icon(
               Icons.arrow_back_ios_new_rounded,
               size: 20.r,
-              color: const Color(0xFF00695C),
+              color: AppColors.primaryDark,
             ),
           ),
         ),
@@ -49,7 +50,7 @@ class SettingPage extends StatelessWidget {
             subtitle: "管理推送通知和提醒",
             trailing: Switch(
               value: true,
-              activeColor: const Color(0xFF009688),
+              activeColor: AppColors.primary,
               onChanged: (value) {
                 Get.snackbar("提示", "消息通知设置已切换");
               },
@@ -71,7 +72,7 @@ class SettingPage extends StatelessWidget {
             subtitle: "跟随系统设置",
             trailing: Switch(
               value: false,
-              activeColor: const Color(0xFF009688),
+              activeColor: AppColors.primary,
               onChanged: (value) {
                 Get.snackbar("提示", "深色模式设置已切换");
               },
@@ -98,7 +99,7 @@ class SettingPage extends StatelessWidget {
             subtitle: "应用使用位置信息的权限",
             trailing: Switch(
               value: true,
-              activeColor: const Color(0xFF009688),
+              activeColor: AppColors.primary,
               onChanged: (value) {
                 Get.snackbar("提示", "位置服务设置已切换");
               },
@@ -121,7 +122,7 @@ class SettingPage extends StatelessWidget {
                 textConfirm: "确定",
                 textCancel: "取消",
                 confirmTextColor: Colors.white,
-                buttonColor: const Color(0xFF009688),
+                buttonColor: AppColors.primary,
                 onConfirm: () {
                   Get.back();
                   Get.snackbar("提示", "缓存已清除");
@@ -204,10 +205,10 @@ class SettingPage extends StatelessWidget {
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: const Color(0xFF009688).withOpacity(0.1),
+                color: AppColors.primaryOpacity010,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(icon, color: const Color(0xFF009688), size: 22.r),
+              child: Icon(icon, color: AppColors.primary, size: 22.r),
             ),
             SizedBox(width: 16.w),
             Expanded(

@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -106,7 +107,7 @@ class HomePage extends StatelessWidget {
 
       return Container(
         padding: EdgeInsets.fromLTRB(24.w, 80.h, 24.w, 32.h),
-        color: const Color(0xFF009688),
+        color: AppColors.primary,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -308,10 +309,10 @@ class HomePage extends StatelessWidget {
       padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32.r),
-        color: const Color(0xFF009688), // 使用主题色作为背景
+        color: AppColors.primary,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF009688).withOpacity(0.3),
+            color: AppColors.primaryOpacity030,
             blurRadius: 15.r,
             offset: Offset(0, 8.h),
           ),
@@ -342,7 +343,6 @@ class HomePage extends StatelessWidget {
                 fontSize: 14.sp,
                 fontFamily: 'monospace',
               ),
-              // 使用 monospace 字体可以防止数字变动时文字左右跳动
             ),
           ),
           const Spacer(),
@@ -352,7 +352,7 @@ class HomePage extends StatelessWidget {
               onPressed: () => controller.handleJourneyCardClick(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF009688),
+                foregroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.r),
                 ),
@@ -389,7 +389,7 @@ class HomePage extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
-              color: const Color(0xFF009688),
+              color: AppColors.primary,
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(Icons.map_outlined, color: Colors.white, size: 40.r),
@@ -481,7 +481,7 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
-              tag: "journey_cover_$journeyId", // 确保 tag 全局唯一且两页一致
+              tag: "journey_cover_$journeyId",
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.r),
                 child: Image.network(
@@ -522,7 +522,7 @@ class HomePage extends StatelessWidget {
             Text(
               trip['title']!,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
-              maxLines: 1, // 防止标题过长撑开布局
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
@@ -538,14 +538,13 @@ class HomePage extends StatelessWidget {
   Widget _buildMainFab() {
     HomeController controller = Get.find<HomeController>();
     return Obx(() {
-      // 如果是行程中状态，不显示FAB（透明）
       if (controller.isInJourney) {
         return Hero(
           tag: "journey_fab",
           child: Container(
             width: 48.r,
             height: 48.r,
-            color: Colors.transparent, // 透明
+            color: Colors.transparent,
           ),
         );
       }
@@ -568,10 +567,10 @@ class HomePage extends StatelessWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF009688),
+              backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               elevation: 6,
-              shadowColor: const Color(0xFF009688).withOpacity(0.4),
+              shadowColor: AppColors.primaryOpacity040,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.r),
               ),
@@ -605,7 +604,7 @@ class HomePage extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // 弹窗高度自适应
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             "准备好出发了吗？",
@@ -613,7 +612,6 @@ class HomePage extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
 
-          // 弹窗内的地图预览区
           Container(
             height: 200.h,
             decoration: BoxDecoration(
@@ -640,14 +638,13 @@ class HomePage extends StatelessWidget {
 
           SizedBox(height: 24.h),
 
-          // 立即出发按钮
           SizedBox(
             width: double.infinity,
             height: 56.h,
             child: ElevatedButton(
               onPressed: () => controller.onStartJourneyConfirmed(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF009688),
+                backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.r),
                 ),

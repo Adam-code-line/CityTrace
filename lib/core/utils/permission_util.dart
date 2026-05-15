@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
@@ -55,7 +56,7 @@ class PermissionUtil {
       textConfirm: "去设置",
       textCancel: "取消",
       confirmTextColor: Colors.white,
-      buttonColor: const Color(0xFF009688),
+      buttonColor: AppColors.primary,
       onConfirm: () {
         Get.back();
         openAppSettings();

@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -62,7 +63,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
     return Container(
       constraints: BoxConstraints(maxHeight: Get.height * 0.75),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       child: Column(
@@ -127,7 +128,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
               child: ElevatedButton(
                 onPressed: _handleConfirm,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF009688),
+                  backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.r),
                   ),
@@ -136,7 +137,7 @@ class _ClassifySheetState extends State<ClassifySheet> {
                 child: Text(
                   _selectedId != null ? "确认归类" : "移出所有文件夹",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -172,13 +173,13 @@ class _ClassifySheetState extends State<ClassifySheet> {
         height: 40.r,
         decoration: BoxDecoration(
           color: isNone
-              ? const Color(0xFF009688).withOpacity(0.1)
+              ? AppColors.primaryOpacity010
               : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Icon(
           Icons.folder_off_outlined,
-          color: isNone ? const Color(0xFF009688) : Colors.grey,
+          color: isNone ? AppColors.primary : Colors.grey,
           size: 22.r,
         ),
       ),
@@ -186,17 +187,17 @@ class _ClassifySheetState extends State<ClassifySheet> {
         "不归类",
         style: TextStyle(
           fontWeight: isNone ? FontWeight.bold : FontWeight.normal,
-          color: isNone ? const Color(0xFF009688) : Colors.black87,
+          color: isNone ? AppColors.primary : AppColors.textBlack,
         ),
       ),
       trailing: isNone
           ? Container(
               padding: EdgeInsets.all(4.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF009688),
+                color: AppColors.primary,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.check, color: Colors.white, size: 16.r),
+              child: Icon(Icons.check, color: AppColors.white, size: 16.r),
             )
           : const SizedBox.shrink(),
       onTap: () => setState(() => _selectedId = null),
@@ -211,13 +212,13 @@ class _ClassifySheetState extends State<ClassifySheet> {
         height: 40.r,
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF009688).withOpacity(0.1)
+              ? AppColors.primaryOpacity010
               : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Icon(
           isSelected ? Icons.folder_special_outlined : Icons.folder_outlined,
-          color: isSelected ? const Color(0xFF009688) : Colors.grey,
+          color: isSelected ? AppColors.primary : Colors.grey,
           size: 22.r,
         ),
       ),
@@ -225,17 +226,17 @@ class _ClassifySheetState extends State<ClassifySheet> {
         folder.name,
         style: TextStyle(
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? const Color(0xFF009688) : Colors.black87,
+          color: isSelected ? AppColors.primary : AppColors.textBlack,
         ),
       ),
       trailing: isSelected
           ? Container(
               padding: EdgeInsets.all(4.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF009688),
+                color: AppColors.primary,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.check, color: Colors.white, size: 16.r),
+              child: Icon(Icons.check, color: AppColors.white, size: 16.r),
             )
           : Icon(Icons.add_circle_outline, color: Colors.grey.shade300, size: 22.r),
       onTap: () => setState(() => _selectedId = folder.folderId),
@@ -276,10 +277,10 @@ class _ClassifySheetState extends State<ClassifySheet> {
             child: Container(
               padding: EdgeInsets.all(12.r),
               decoration: BoxDecoration(
-                color: const Color(0xFF009688),
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(16.r),
               ),
-              child: Icon(Icons.add, color: Colors.white, size: 22.r),
+              child: Icon(Icons.add, color: AppColors.white, size: 22.r),
             ),
           ),
         ],

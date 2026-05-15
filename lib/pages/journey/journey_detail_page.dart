@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -48,7 +49,7 @@ class JourneyDetailPage extends StatelessWidget {
       pinned: true,
       iconTheme: const IconThemeData(color: Colors.white),
       actionsIconTheme: const IconThemeData(color: Colors.white),
-      backgroundColor: const Color(0xFF009688),
+      backgroundColor: AppColors.primary,
       flexibleSpace: FlexibleSpaceBar(
         title: Obx(
           () => Text(
@@ -80,7 +81,7 @@ class JourneyDetailPage extends StatelessWidget {
                   controller.journey.value?.cover ?? "",
                   fit: BoxFit.cover,
                   errorBuilder: (c, e, s) =>
-                      Container(color: const Color(0xFF80CBC4)),
+                      Container(color: AppColors.primaryLight),
                 ),
               ),
             ),
@@ -136,13 +137,13 @@ class JourneyDetailPage extends StatelessWidget {
             width: 80.w,
             height: 80.h,
             decoration: BoxDecoration(
-              color: const Color(0xFF009688).withOpacity(0.1),
+              color: AppColors.primaryOpacity010,
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Icon(Icons.map_outlined, color: Color(0xFF009688), size: 32.r),
+                Icon(Icons.map_outlined, color: AppColors.primary, size: 32.r),
               ],
             ),
           ),
@@ -245,8 +246,8 @@ class JourneyDetailPage extends StatelessWidget {
                   Container(
                     width: 32.w,
                     height: 32.h,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF009688),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -357,14 +358,14 @@ class JourneyDetailPage extends StatelessWidget {
                         vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF009688).withOpacity(0.05),
+                        color: AppColors.primaryOpacity005,
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
                         "#$tag",
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: Color(0xFF009688),
+                          color: AppColors.primary,
                         ),
                       ),
                     ),
@@ -430,7 +431,7 @@ class JourneyDetailPage extends StatelessWidget {
         heroTag: "journey_fab",
         icon: Icons.add,
         activeIcon: Icons.close,
-        backgroundColor: const Color(0xFF009688),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         visible: true,
         curve: Curves.bounceIn,
@@ -488,7 +489,7 @@ class JourneyDetailPage extends StatelessWidget {
       textConfirm: "确定",
       textCancel: "取消",
       confirmTextColor: Colors.white,
-      buttonColor: const Color(0xFF009688),
+      buttonColor: AppColors.primary,
       onConfirm: () {
         controller.onEndJourney();
         Get.back(); // 关弹窗

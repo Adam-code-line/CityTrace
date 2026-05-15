@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:citytrace/controllers/map_trace_controller.dart';
 import 'package:citytrace/core/utils/metadata_util.dart';
 import 'package:citytrace/core/utils/storage_util.dart';
@@ -35,7 +36,8 @@ class MainApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           // 默认主题配置
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+            colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+            primaryColor: AppColors.primary,
             useMaterial3: true,
           ),
           initialRoute: AppPages.INITIAL,

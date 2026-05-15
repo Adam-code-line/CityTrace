@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -85,7 +86,7 @@ class ListPage extends GetView<ListController> {
           margin: EdgeInsets.only(right: 12.w),
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF009688) : Colors.grey.shade100,
+            color: isSelected ? AppColors.primary : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(25.r),
           ),
           child: Center(

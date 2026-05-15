@@ -1,3 +1,4 @@
+import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -31,7 +32,7 @@ class MapView extends StatelessWidget {
             if (points.isNotEmpty)
               Polyline(
                 points: points,
-                color: const Color(0xFF009688),
+                color: AppColors.primary,
                 strokeWidth: 5,
                 strokeCap: StrokeCap.round,
                 strokeJoin: StrokeJoin.round,
