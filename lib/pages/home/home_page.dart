@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
@@ -14,94 +13,80 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
 
-    return AdvancedDrawer(
-      backdrop: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF009688),
-              const Color(0xFF009688).withOpacity(0.2),
+    return Scaffold(
+      key: controller.scaffoldKey,
+      backgroundColor: Colors.white,
+      drawer: _buildLeftDrawer(), // 侧拉菜单
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 12.h),
+              _buildTopBar(), // Header
+              SizedBox(height: 20.h),
+              _buildWelcomeSection(), // 欢迎语
+              SizedBox(height: 16.h),
+              _buildContextSection(), // 环境信息
+              SizedBox(height: 24.h),
+              _buildHeroCard(), // 行程状态信息
+              SizedBox(height: 32.h),
+              _buildRecentTripsTitle(), // 最近行程标题
+              SizedBox(height: 16.h),
+              _buildRecentTripsSection(), // 最近行程信息
+              SizedBox(height: 48.h), // 留出 FAB 空间，避免遮挡行程信息
             ],
           ),
         ),
       ),
-      controller: controller.advancedDrawerController,
-      animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 300),
-      animateChildDecoration: true,
-      rtlOpening: false,
-      disabledGestures: false,
-      childDecoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _buildMainFab(), // 底部 FAB
+    );
+  }
+
+  Widget _buildLeftDrawer() {
+    HomeController controller = Get.find<HomeController>();
+    return Drawer(
+      width: Get.width * 0.8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(32.r),
+          bottomRight: Radius.circular(32.r),
+        ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        children: [
+          // 侧边栏头部：用户信息
+          _buildDrawerHeader(),
+          // 菜单列表
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               children: [
-                SizedBox(height: 12.h),
-                _buildTopBar(), // Header
-                SizedBox(height: 20.h),
-                _buildWelcomeSection(), // 欢迎语
-                SizedBox(height: 16.h),
-                _buildContextSection(), // 环境信息
-                SizedBox(height: 24.h),
-                _buildHeroCard(), // 行程状态信息
-                SizedBox(height: 32.h),
-                _buildRecentTripsTitle(), // 最近行程标题
-                SizedBox(height: 16.h),
-                _buildRecentTripsSection(), // 最近行程信息
-                SizedBox(height: 48.h), // 留出 FAB 空间，避免遮挡行程信息
+                _buildDrawerItem(
+                  Icons.person_outline,
+                  "个人主页",
+                  () => controller.handleMenuClick('/profile'),
+                ),
+                _buildDrawerItem(
+                  Icons.location_on_outlined,
+                  "全部行程",
+                  () => controller.handleMenuClick('/list'),
+                ),
               ],
             ),
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: _buildMainFab(), // 底部 FAB
-      ),
-      drawer: SafeArea(
-        child: Container(
-          child: Column(
-            children: [
-              // 侧边栏头部：用户信息
-              _buildDrawerHeader(),
-              // 菜单列表
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  children: [
-                    _buildDrawerItem(
-                      Icons.person_outline,
-                      "个人主页",
-                      () => controller.handleMenuClick('/profile'),
-                    ),
-                    _buildDrawerItem(
-                      Icons.location_on_outlined,
-                      "全部行程",
-                      () => controller.handleMenuClick('/list'),
-                    ),
-                  ],
-                ),
-              ),
-              // 底部退出按钮
-              const Divider(),
-              _buildDrawerItem(
-                Icons.logout,
-                "退出登录",
-                () => controller.logout(),
-                color: Colors.red,
-              ),
-              SizedBox(height: 32.h),
-            ],
+          // 底部退出按钮
+          const Divider(),
+          _buildDrawerItem(
+            Icons.logout,
+            "退出登录",
+            () => controller.logout(),
+            color: Colors.red,
           ),
-        ),
+          SizedBox(height: 32.h),
+        ],
       ),
     );
   }
@@ -119,6 +104,7 @@ class HomePage extends StatelessWidget {
 
       return Container(
         padding: EdgeInsets.fromLTRB(24.w, 80.h, 24.w, 32.h),
+        color: const Color(0xFF009688),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -174,12 +160,12 @@ class HomePage extends StatelessWidget {
     Color? color,
   }) {
     return ListTile(
-      leading: Icon(icon, color: color ?? Colors.white),
+      leading: Icon(icon, color: color ?? Colors.black87),
       title: Text(
         title,
-        style: TextStyle(color: color ?? Colors.white, fontSize: 16.sp),
+        style: TextStyle(color: color ?? Colors.black87, fontSize: 16.sp),
       ),
-      trailing: Icon(Icons.chevron_right, size: 20.r, color: Colors.white54),
+      trailing: Icon(Icons.chevron_right, size: 20.r),
       onTap: onTap,
     );
   }
@@ -189,7 +175,6 @@ class HomePage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // 头像（点击打开侧边栏）
         GestureDetector(
           onTap: () => controller.handleAvatarClick(),
           child: Obx(

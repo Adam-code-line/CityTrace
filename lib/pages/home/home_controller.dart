@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/user_controller.dart';
@@ -17,9 +16,7 @@ class HomeController extends GetxController {
   final JourneyService _journeyService = JourneyService();
   final ContextService _contextService = ContextService();
 
-  // AdvancedDrawer 控制器
-  final AdvancedDrawerController advancedDrawerController =
-      AdvancedDrawerController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   // 响应式变量
   final RxList<Map<String, String>> recentTrips = <Map<String, String>>[].obs;
@@ -153,14 +150,7 @@ class HomeController extends GetxController {
 
   /// 头像点击
   void handleAvatarClick() {
-    isLoggedIn
-        ? advancedDrawerController.showDrawer()
-        : Get.toNamed('/login');
-  }
-
-  /// 汉堡菜单按钮点击
-  void handleMenuButtonPressed() {
-    advancedDrawerController.showDrawer();
+    isLoggedIn ? scaffoldKey.currentState?.openDrawer() : Get.toNamed('/login');
   }
 
   /// 侧边栏菜单点击
