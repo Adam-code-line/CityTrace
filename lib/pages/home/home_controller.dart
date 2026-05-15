@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/user_controller.dart';
@@ -16,7 +17,9 @@ class HomeController extends GetxController {
   final JourneyService _journeyService = JourneyService();
   final ContextService _contextService = ContextService();
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  // AdvancedDrawer 控制器
+  final AdvancedDrawerController advancedDrawerController =
+      AdvancedDrawerController();
 
   // 响应式变量
   final RxList<Map<String, String>> recentTrips = <Map<String, String>>[].obs;
@@ -70,7 +73,7 @@ class HomeController extends GetxController {
     if (cachedId == null || cachedId.isEmpty) return;
 
     try {
-      // 向后端请求该行程的详情，验证是否真的“正在进行”
+      // 向后端请求该行程的详情，验证是否真的"正在进行"
       final journeyDetail = await _journeyService.getJourneyDetail(cachedId);
 
       if (journeyDetail != null && journeyDetail.status == "ongoing") {
@@ -150,7 +153,14 @@ class HomeController extends GetxController {
 
   /// 头像点击
   void handleAvatarClick() {
-    isLoggedIn ? scaffoldKey.currentState?.openDrawer() : Get.toNamed('/login');
+    isLoggedIn
+        ? advancedDrawerController.showDrawer()
+        : Get.toNamed('/login');
+  }
+
+  /// 汉堡菜单按钮点击
+  void handleMenuButtonPressed() {
+    advancedDrawerController.showDrawer();
   }
 
   /// 侧边栏菜单点击
