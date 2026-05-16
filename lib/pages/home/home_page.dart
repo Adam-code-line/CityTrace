@@ -18,29 +18,49 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       key: controller.scaffoldKey,
+      drawerEnableOpenDragGesture: true,
+      drawerEdgeDragWidth: 48.w,
       backgroundColor: AppColors.pageBackground,
       drawer: _buildLeftDrawer(), // 侧拉菜单
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 12.h),
-              _buildTopBar(), // Header
-              SizedBox(height: 20.h),
-              _buildWelcomeSection(), // 欢迎语
-              SizedBox(height: 16.h),
-              _buildContextSection(), // 环境信息
-              SizedBox(height: 24.h),
-              _buildHeroCard(), // 行程状态信息
-              SizedBox(height: 32.h),
-              _buildRecentTripsTitle(), // 最近行程标题
-              SizedBox(height: 16.h),
-              _buildRecentTripsSection(), // 最近行程信息
-              SizedBox(height: 48.h), // 留出 FAB 空间，避免遮挡行程信息
-            ],
-          ),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 12.h),
+                  _buildTopBar(), // Header
+                  SizedBox(height: 20.h),
+                  _buildWelcomeSection(), // 欢迎语
+                  SizedBox(height: 16.h),
+                  _buildContextSection(), // 环境信息
+                  SizedBox(height: 24.h),
+                  _buildHeroCard(), // 行程状态信息
+                  SizedBox(height: 32.h),
+                  _buildRecentTripsTitle(), // 最近行程标题
+                  SizedBox(height: 16.h),
+                  _buildRecentTripsSection(), // 最近行程信息
+                  SizedBox(height: 48.h), // 留出 FAB 空间，避免遮挡行程信息
+                ],
+              ),
+            ),
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onHorizontalDragUpdate: (details) {
+                  if (details.delta.dx > 2) {
+                    controller.scaffoldKey.currentState?.openDrawer();
+                  }
+                },
+                child: SizedBox(width: 48.w),
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -77,21 +97,21 @@ class HomePage extends StatelessWidget {
                   "全部行程",
                   () => controller.handleMenuClick('/list'),
                 ),
-              //_buildDrawerItem(
-              //  Icons.calendar_today_outlined,
-              //  "行程计划",
-              //  () => controller.handleMenuClick('/plans'),
-              // ),
-              // _buildDrawerItem(
-              //  Icons.favorite_outline,
-              //  "我的收藏",
-              //  () => controller.handleMenuClick('/favorites'),
-              // ),
-              // _buildDrawerItem(
-              //  Icons.share_outlined,
-              //  "分享动态",
-              //  () => controller.handleMenuClick('/share'),
-              //),  
+                //_buildDrawerItem(
+                //  Icons.calendar_today_outlined,
+                //  "行程计划",
+                //  () => controller.handleMenuClick('/plans'),
+                // ),
+                // _buildDrawerItem(
+                //  Icons.favorite_outline,
+                //  "我的收藏",
+                //  () => controller.handleMenuClick('/favorites'),
+                // ),
+                // _buildDrawerItem(
+                //  Icons.share_outlined,
+                //  "分享动态",
+                //  () => controller.handleMenuClick('/share'),
+                //),
               ],
             ),
           ),
