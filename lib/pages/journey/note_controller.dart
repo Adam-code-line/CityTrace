@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -19,9 +21,16 @@ class NoteController extends GetxController {
   final RxBool isGenerating = false.obs;
   final RxBool isEditing = false.obs; // 是否处于编辑模式
 
+  // 用于流式打字机效果 -- 界面上实际绑定的内容
+  final RxString displayedTitle = "".obs;
+  final RxString displayedBody = "".obs;
+
   // 用于编辑的 TextEditingController
   late TextEditingController titleEditController;
   late TextEditingController bodyEditController;
+
+  // 内部流式控制
+  Timer? _typeTimer;
 
   // 预设风格选项 (对应 API 文档)
   final List<Map<String, String>> styleOptions = [
@@ -41,6 +50,7 @@ class NoteController extends GetxController {
 
   @override
   void onClose() {
+    _typeTimer?.cancel();
     titleEditController.dispose();
     bodyEditController.dispose();
     super.onClose();
@@ -56,6 +66,10 @@ class NoteController extends GetxController {
     }
 
     isGenerating.value = true;
+    // 重置显示内容
+    displayedTitle.value = "";
+    displayedBody.value = "";
+    hashtags.clear();
 
     final result = await _aiService.generateNote(
       journeyId: journeyId,
@@ -69,21 +83,66 @@ class NoteController extends GetxController {
       if (result['tags'] != null) {
         hashtags.value = List<String>.from(result['tags']);
       }
+      // 开始打字机效果
+      _startTypingEffect();
+    } else {
+      // API 失败，恢复非生成状态
+      isGenerating.value = false;
+    }
+  }
+
+  /// 流式打字机效果：逐字将 generatedBody 展示到 displayedBody
+  void _startTypingEffect() {
+    _typeTimer?.cancel();
+
+    // 先瞬间显示标题（标题短，无需逐字）
+    displayedTitle.value = generatedTitle.value;
+
+    final String fullBody = generatedBody.value;
+    if (fullBody.isEmpty) {
+      isGenerating.value = false;
+      return;
     }
 
-    isGenerating.value = false;
+    int charIndex = 0;
+    const int charsPerTick = 3; // 每次添加 3 个字符，模拟流式速度
+    const Duration tickDuration = Duration(milliseconds: 30);
+
+    _typeTimer = Timer.periodic(tickDuration, (timer) {
+      if (charIndex >= fullBody.length) {
+        timer.cancel();
+        _typeTimer = null;
+        isGenerating.value = false;
+        return;
+      }
+
+      int endIndex = charIndex + charsPerTick;
+      if (endIndex > fullBody.length) {
+        endIndex = fullBody.length;
+      }
+      displayedBody.value = fullBody.substring(0, endIndex);
+      charIndex = endIndex;
+    });
   }
 
   /// 进入编辑模式
   void enterEditMode() {
-    titleEditController.text = generatedTitle.value;
-    bodyEditController.text = generatedBody.value;
+    titleEditController.text = displayedTitle.value;
+    bodyEditController.text = displayedBody.value;
     isEditing.value = true;
+    // 停止正在进行的打字机效果
+    _typeTimer?.cancel();
+    _typeTimer = null;
+    // 将完整内容直接显示
+    displayedTitle.value = generatedTitle.value;
+    displayedBody.value = generatedBody.value;
   }
 
   void saveEdits() {
     generatedTitle.value = titleEditController.text;
     generatedBody.value = bodyEditController.text;
+    displayedTitle.value = titleEditController.text;
+    displayedBody.value = bodyEditController.text;
     isEditing.value = false;
   }
 

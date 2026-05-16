@@ -1,8 +1,9 @@
-import 'package:citytrace/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../components/ui/info_pill.dart';
+import '../../core/theme/app_colors.dart';
 import 'note_controller.dart';
 
 class NotePage extends StatelessWidget {
@@ -77,9 +78,7 @@ class NotePage extends StatelessWidget {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.r),
-                              borderSide: BorderSide(
-                                color: AppColors.primary,
-                              ),
+                              borderSide: BorderSide(color: AppColors.primary),
                             ),
                           ),
                         ),
@@ -121,13 +120,27 @@ class NotePage extends StatelessWidget {
 
             SizedBox(height: 40.h),
 
-            // 结果展示区域
+            // 结果展示区域 - 平滑过渡
             Obx(() {
-              if (controller.generatedBody.isEmpty &&
-                  !controller.isGenerating.value) {
-                return _buildEmptyState();
+              Widget resultWidget;
+              if (controller.isGenerating.value &&
+                  controller.generatedBody.isEmpty) {
+                // 生成中 → 显示加载骨架屏
+                resultWidget = _buildLoadingSkeleton();
+              } else if (controller.generatedBody.isNotEmpty) {
+                // 有内容 → 显示结果卡片（含流式输出阶段）
+                resultWidget = _buildResultCard(controller);
+              } else {
+                // 无内容且非生成中 → 显示空状态
+                resultWidget = _buildEmptyState();
               }
-              return _buildResultCard(controller);
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: resultWidget,
+              );
             }),
           ],
         ),
@@ -161,9 +174,7 @@ class NotePage extends StatelessWidget {
                     : Colors.grey.shade50,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: isSelected
-                      ? AppColors.primary
-                      : Colors.transparent,
+                  color: isSelected ? AppColors.primary : Colors.transparent,
                   width: 2.w,
                 ),
               ),
@@ -175,9 +186,7 @@ class NotePage extends StatelessWidget {
                     style['name']!,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: isSelected
-                          ? AppColors.primary
-                          : Colors.black87,
+                      color: isSelected ? AppColors.primary : Colors.black87,
                     ),
                   ),
                   Text(
@@ -195,9 +204,87 @@ class NotePage extends StatelessWidget {
     );
   }
 
+  /// 加载中的骨架屏
+  Widget _buildLoadingSkeleton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      key: const ValueKey('loading'),
+      children: [
+        Row(
+          children: [
+            Icon(Icons.auto_awesome, color: AppColors.primary, size: 20.r),
+            SizedBox(width: 8.w),
+            Text(
+              "AI 创作中...",
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(20.r),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 标题骨架
+              Container(
+                width: 160.w,
+                height: 22.sp,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              // 内容骨架 x3
+              ...List.generate(3, (i) {
+                final widths = [320.w, 280.w, 180.w];
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 12.h),
+                  child: Container(
+                    width: widths[i],
+                    height: 14.sp,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                );
+              }),
+              SizedBox(height: 12.h),
+              // 底部标签骨架
+              Row(
+                children: List.generate(3, (i) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: 8.w),
+                    child: Container(
+                      width: 50.w,
+                      height: 16.sp,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildResultCard(NoteController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      key: const ValueKey('result'),
       children: [
         Row(
           children: [
@@ -236,7 +323,7 @@ class NotePage extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        controller.generatedTitle.value,
+                        controller.displayedTitle.value,
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
@@ -254,18 +341,16 @@ class NotePage extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        controller.generatedBody.value,
+                        controller.displayedBody.value,
                         style: TextStyle(fontSize: 15.sp, height: 1.6),
                       ),
                 SizedBox(height: 20.h),
                 Wrap(
                   spacing: 8.w,
+                  runSpacing: 8.h,
                   children: controller.hashtags
                       .map(
-                        (t) => Text(
-                          "#$t",
-                          style: TextStyle(color: AppColors.primary),
-                        ),
+                        (t) => InfoPill(icon: Icons.tag, text: "#$t"),
                       )
                       .toList(),
                 ),
@@ -314,6 +399,7 @@ class NotePage extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return Center(
+      key: const ValueKey('empty'),
       child: Column(
         children: [
           Icon(Icons.edit_note, size: 64.r, color: Colors.grey.shade200),
