@@ -77,6 +77,21 @@ class HomePage extends StatelessWidget {
                   "全部行程",
                   () => controller.handleMenuClick('/list'),
                 ),
+              //_buildDrawerItem(
+              //  Icons.calendar_today_outlined,
+              //  "行程计划",
+              //  () => controller.handleMenuClick('/plans'),
+              // ),
+              // _buildDrawerItem(
+              //  Icons.favorite_outline,
+              //  "我的收藏",
+              //  () => controller.handleMenuClick('/favorites'),
+              // ),
+              // _buildDrawerItem(
+              //  Icons.share_outlined,
+              //  "分享动态",
+              //  () => controller.handleMenuClick('/share'),
+              //),  
               ],
             ),
           ),
